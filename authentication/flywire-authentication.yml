@@ -1,0 +1,28 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/api-basics.htm
+notes: >-
+  Flywire has no published OpenAPI (the api-platform openapi.json returns 401),
+  so this profile is captured from the developer docs rather than derived. The
+  Payments API authorizes with a single static API key sent in a request header;
+  there is no OAuth/OIDC flow and therefore no scopes artifact. Webhook callbacks
+  are separately authenticated by an HMAC-SHA256 signature computed with a shared
+  secret (see asyncapi/flywire-payments-webhooks.yml).
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  oauth2_flows: []
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter_name: X-Authentication-Key
+  description: >-
+    Per-application API key obtained by registering with Flywire (contact
+    Flywire support). Sent on every request as the X-Authentication-Key header.
+  registration: Contact Flywire to register an application and receive an API key + Shared Secret.
+  sources: [docs]
+webhook_auth:
+  header: X-Flywire-Digest
+  algorithm: HMAC-SHA256 (base64-encoded hash of the request body + Shared Secret)
+  secret: Shared Secret issued at application registration
