@@ -1,0 +1,32 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+# Our Vulnerability Disclose Program
+# We participate in a Vulnerability Disclose Program through the Intigrity platform.
+# If you are interested in joining our program, please use the following URL: 
+# https://app.intigriti.com/programs/flywire/flywirevulnerabilitydiscloseprogram/
+
+Contact: mailto:security@flywire.com
+Expires: 2027-04-08T05:43:11.000Z
+Encryption: https://www.flywire.com/.well-known/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://www.flywire.com/.well-known/security.txt
+Hiring: https://www.flywire.com/company/careers
+Policy: https://app.intigriti.com/programs/flywire/flywirevulnerabilitydiscloseprogram/
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEQIkqsl6Irefr63TRLRrZ8Mb5Bv8FAmnV934ACgkQLRrZ8Mb5
+Bv/y7A/9G2DcBZbjfDb24Dcahw9FOFS7RfTQMMIKYdA1T/lGajteYw669dUH0/xq
+SUU4JXHN60tbr3lUuYRDkt+fNE0Omd7GANvzKQJXNxyCH97JjfZiskgwpksqZKg3
+0tk6ZDDDJbpg3PjqZByLkWgseoUXMxcSqtOuWrbUgj8+8Nb2n6tNka2d7GXLEu16
+gDcnvbxkKE5UuVOZ+5cve9Bo+4CK0mp2O/BRTRTWOZWRq8Rmb8EHkfPqZsRej7QF
+6zLz4cfrRXoB1cnuW1zpbONBRhtDg1KQVkDc+h0luA8tV24DDB1Rt1xdB40Wh6Ox
+uI8/IpNLSfI9Wg68R5pCZLNoHMIlvCfzyno7ABbA5XSrEryVE68lswNeQT3mxgrh
+xPoxWXPDwIzK6fdDJEWsQg2G8rPwuoxCQ3F9QwFwjfRlxFyg66Ro0zllrgIwbrbC
+PFsfaUJdnO6jZc0UZ0LF5lH5xeR6io3/W/YBEn17WESQGyvSs/ld8Y4xfgsM6Jut
+c2yIPEpYytQCv6PrXeFlTyD+soiJwadsNScWn5/YuZ7ce3eBjEu329c+nHfPY/Rv
+/v+Lf9DOp0C+rv4SoxnbFCZCSdhsK8zxQyeVOkGuXqKd02WZPHubPexSAiY+G8jh
+WXDROoRIsRHXVUsiTieM2IkQ8CM82FVwSDrAwXPahxtfrCc6ny8=
+=uwX5
+-----END PGP SIGNATURE-----

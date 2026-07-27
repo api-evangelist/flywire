@@ -1,0 +1,32 @@
+# Flywire
+
+> Flywire is a global payments enablement and software company operating a proprietary cross-border payment network across 140+ currencies and 240+ countries and territories, serving education, healthcare, travel, and B2B. The Flywire Payments API is an HTTP/JSON REST API (API-key auth) for creating and capturing one-off, recurring, pre-authorization, refund, and 529 payments, managing payors, recipients, checkout sessions and documents, and receiving HMAC-signed payment-status webhooks.
+
+## APIs
+- [Flywire Payments API](https://developers.flywire.com/education/Content/api-landing-page.htm): REST API for the Flywire global payment network. Base URL https://api-platform.flywire.com/payments/v1/ (sandbox https://api-platform-sandbox.flywire.com/payments/v1/).
+
+## Docs
+- [Developer Portal](https://developers.flywire.com/): Home of Flywire's developer documentation.
+- [API Basics / Getting Started](https://developers.flywire.com/education/Content/api-basics.htm): Auth (X-Authentication-Key header), content types, versioning, pagination, rate limits.
+- [API Reference](https://developers.flywire.com/education/Content/api-reference.htm): Resources — Recipients, Payors, Checkout Sessions, Payments, Recurring Plans, Refunds, Offers, Orders, Documents.
+- [Error Handling](https://developers.flywire.com/education/Content/error-handling.htm): RFC 7807 problem+json error contract.
+- [Sandbox](https://developers.flywire.com/education/Content/sandbox_one-off-payments-elements.htm): Test cards and magic-value scenarios.
+- [Payment Status Notifications](https://developers.flywire.com/education/Content/notifications-payment-status.htm): Webhook/callback event catalog.
+
+## Artifacts
+- [Authentication](authentication/flywire-authentication.yml): API-key header profile.
+- [Conventions](conventions/flywire-conventions.yml): Pagination, versioning, rate limits, error envelope.
+- [Error Catalog](errors/flywire-problem-types.yml): RFC 7807 problem types.
+- [Webhooks](asyncapi/flywire-payments-webhooks.yml): Payment-status callback catalog.
+- [Sandbox](sandbox/flywire-sandbox.yml): Test cards and magic values.
+- [Packages / SDKs](packages/flywire-packages.yml): First-party @flywire npm libraries.
+- [Components](components/flywire-components.yml): Flywire Elements, Checkout, Pay-By-Link.
+- [Data Model](data-model/flywire-data-model.yml): Entity-relationship graph.
+- [Lifecycle](lifecycle/flywire-lifecycle.yml): Versioning + status page.
+- [Conformance](conformance/flywire-conformance.yml): PCI DSS L1, SOC 2 Type II, ISO 27001.
+
+## Optional
+- [Status Page](https://status.flywire.com/)
+- [Security & Compliance](https://www.flywire.com/company/security)
+- [Vulnerability Disclosure (Intigriti)](https://app.intigriti.com/programs/flywire/flywirevulnerabilitydiscloseprogram/)
+- [GitHub (peertransfer)](https://github.com/peertransfer)

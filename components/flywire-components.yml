@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/api-landing-page.htm
+notes: >-
+  Flywire exposes hosted/embeddable client-side payment surfaces rather than
+  building a custom checkout from raw API calls. Three integration surfaces are
+  documented, backed by the @flywire npm libraries in packages/.
+families:
+- name: Flywire Elements
+  description: >-
+    Embeddable, PCI-friendly UI elements for collecting payment details on your
+    own page while Flywire hosts the sensitive fields; supports one-off,
+    recurring and pre-authorization flows and 3DS.
+  docs: https://developers.flywire.com/education/Content/sandbox_one-off-payments-elements.htm
+  loaders:
+  - "@flywire/flywire-js"
+  - "@flywire/react-flywire-js"
+- name: Checkout
+  description: >-
+    Hosted checkout session experience — create a checkout session via the API
+    and redirect/embed the Flywire-hosted payment page.
+  docs: https://developers.flywire.com/education/Content/api-reference.htm
+  loaders:
+  - "@flywire/flywire-js"
+- name: Pay-By-Link
+  description: >-
+    Shareable hosted payment link that lets a payor complete a payment without a
+    custom front-end integration.
+  docs: https://developers.flywire.com/education/Content/api-landing-page.htm
+loader_libraries:
+- name: "@flywire/flywire-js"
+  url: https://www.npmjs.com/package/@flywire/flywire-js
+- name: "@flywire/react-flywire-js"
+  url: https://www.npmjs.com/package/@flywire/react-flywire-js

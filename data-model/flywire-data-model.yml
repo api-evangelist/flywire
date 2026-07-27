@@ -1,0 +1,75 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/api-reference.htm
+notes: >-
+  Entity-relationship graph for the Flywire Payments API, captured from the
+  documented resources and payment operations (no OpenAPI is published, so
+  relationships are read from the docs rather than $ref-derived).
+entities:
+- name: Recipient
+  description: The organization receiving funds (e.g. a university, hospital, business). Common to all payment types.
+- name: Payor
+  description: The party making payments; used primarily by recurring payments.
+- name: CheckoutSession
+  description: A session for one-off, recurring, or pre-authorization payment flows.
+- name: Payment
+  description: A payment/charge moving through the status lifecycle (initiated, authorized, adjusted, processed, guaranteed, delivered, reversed, failed, cancelled).
+  id_field: payment_id
+  reference_field: payment_reference
+- name: RecurringPlan
+  description: A recurring payment schedule attached to a payor.
+- name: Refund
+  description: A refund issued against an existing payment.
+- name: Offer
+  description: Resource for 529 payments.
+- name: Order
+  description: Resource for 529 payments.
+- name: Document
+  description: A file uploaded/downloaded in association with a payment.
+relationships:
+- from: Payment
+  to: Recipient
+  type: belongs_to
+  via: recipient
+- from: Payment
+  to: Payor
+  type: belongs_to
+  via: payor_id
+- from: Payment
+  to: CheckoutSession
+  type: belongs_to
+  via: charge_intent
+- from: Refund
+  to: Payment
+  type: belongs_to
+  via: paymentID (POST /payments/{paymentID}/refunds)
+- from: RecurringPlan
+  to: Payor
+  type: belongs_to
+  via: payor_id
+- from: Order
+  to: Offer
+  type: belongs_to
+  via: offer
+- from: Document
+  to: Payment
+  type: belongs_to
+  via: payment
+- from: Payor
+  to: RecurringPlan
+  type: has_many
+  via: payor_id
+- from: Payment
+  to: Document
+  type: has_many
+  via: payment
+operations:
+- {method: POST, path: "/payments/charge", summary: Create a payment (charge)}
+- {method: GET, path: "/payments", summary: List payments}
+- {method: GET, path: "/payments/{paymentID}", summary: Get payment details}
+- {method: GET, path: "/payments/{paymentID}/receipt", summary: Get payment receipt}
+- {method: POST, path: "/payments/{paymentID}/captures", summary: Capture a pre-authorization}
+- {method: POST, path: "/payments/{paymentID}/authorization_adjustments", summary: Adjust an authorization}
+- {method: POST, path: "/payments/{paymentID}/process", summary: Mark payment as processed}
+- {method: POST, path: "/payments/{paymentID}/cancel", summary: Cancel a payment}
+- {method: POST, path: "/payments/{paymentID}/refunds", summary: Create a refund}

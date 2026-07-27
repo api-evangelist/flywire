@@ -1,0 +1,48 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/error-handling.htm
+format: rfc7807
+notes: >-
+  Flywire returns RFC 7807 problem+json error objects. The envelope carries
+  type, title, status, detail and an errors[] array; each errors[] item carries
+  source, param, type and message. The item-level "type" is a machine string
+  (e.g. missing_param, invalid_param, invalid_email). Captured from the docs
+  error-handling reference (no OpenAPI to derive from).
+envelope:
+  fields:
+  - {name: type, description: URL to the API documentation for the problem type}
+  - {name: title, description: Short human-readable summary of the problem type}
+  - {name: status, description: HTTP status code number}
+  - {name: detail, description: Human-readable explanation specific to this occurrence}
+  - {name: errors, description: Array of field-level error objects}
+  errors_item_fields:
+  - {name: source, description: Location in the request where the error originated}
+  - {name: param, description: The parameter that caused the error}
+  - {name: type, description: The machine-readable error type (e.g. missing_param, invalid_param, invalid_email)}
+  - {name: message, description: Human-readable message describing the error}
+problems:
+- status: 400
+  title: Bad Request
+  detail: Missing or invalid parameters, non-processable entities, method not allowed, or an attempt to create something that already exists.
+- status: 401
+  title: Unauthorized
+  detail: The API request was not authorized. All API requests must contain a valid API key in the X-Authentication-Key header.
+- status: 404
+  title: Not Found
+  detail: The server did not find anything that matches the request URI.
+- status: 422
+  title: Unprocessable Entity
+  detail: The request was missing a parameter or a parameter contained an invalid value.
+- status: 429
+  title: Too Many Requests
+  detail: Rate limit exceeded (500 requests per minute). Access is blocked for 10 minutes.
+- status: 500
+  title: Internal Server Error
+  detail: The server is unavailable or an unexpected condition was encountered.
+- status: 503
+  title: Service Unavailable
+  detail: The server is currently unavailable. This is typically a temporary state.
+field_error_types:
+- missing_param
+- invalid_param
+- invalid_email

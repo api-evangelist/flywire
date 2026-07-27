@@ -1,8 +1,17 @@
 aid: flywire
 name: Flywire
-description: Flywire is a company surfaced as a portfolio company of 500-global, accel, bain-capital-ventures,
-  balderton-capital, qed-investors and added to the API Evangelist network as a stub for enrichment. This
-  profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Flywire is a global payments enablement and software company that operates a
+  proprietary cross-border payment network spanning more than 140 currencies and
+  240 countries and territories, serving the education, healthcare, travel, and
+  business-to-business verticals. The Flywire Payments API is an HTTP-based REST
+  API (JSON request/response bodies, API-Key authorization) that lets platforms
+  integrate Flywire's payment network directly — creating and capturing one-off,
+  recurring, pre-authorization, refund, and 529 payments, managing payors,
+  recipients, checkout sessions and documents, and receiving real-time payment
+  status callbacks (webhooks) signed with an HMAC-SHA256 shared secret. Flywire
+  also ships client-side JavaScript and React libraries (Flywire Elements,
+  Checkout, Pay-By-Link) for embedding hosted payment experiences.
 url: https://raw.githubusercontent.com/api-evangelist/flywire/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -14,17 +23,130 @@ x-backed-by:
 - qed-investors
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Payments
+- Cross-Border Payments
+- FinTech
+- Education Payments
+- Healthcare Payments
+- Travel Payments
+- B2B Payments
+- Checkout
+- Webhooks
+image: https://www.flywire.com/favicon.ico
+apis:
+- name: Flywire Payments API
+  description: >-
+    REST API for integrating Flywire's global payment network — one-off,
+    recurring, pre-authorization, refund and 529 payments, checkout sessions,
+    payors, recipients, and documents, with real-time payment-status callbacks.
+  humanURL: https://developers.flywire.com/education/Content/api-landing-page.htm
+  baseURL: https://api-platform.flywire.com/payments/v1/
+  tags:
+  - Payments
+  - Cross-Border Payments
+  - Refunds
+  properties:
+  - type: Documentation
+    url: https://developers.flywire.com/education/Content/api-basics.htm
+  - type: APIReference
+    url: https://developers.flywire.com/education/Content/api-reference.htm
+  - type: Sandbox
+    url: sandbox/flywire-sandbox.yml
+  - type: Authentication
+    url: authentication/flywire-authentication.yml
+  - type: ErrorCatalog
+    url: errors/flywire-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/flywire-payments-webhooks.yml
+  - type: Conventions
+    url: conventions/flywire-conventions.yml
+  - type: DataModel
+    url: data-model/flywire-data-model.yml
+  - type: MCPServer
+    url: mcp/flywire-mcp.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: TrustCenter
+  url: security/flywire-trust-center.yml
 - type: Website
-  url: https://flywire.com
+  url: https://www.flywire.com
+- type: DeveloperPortal
+  url: https://developers.flywire.com/
+- type: Documentation
+  url: https://developers.flywire.com/education/Content/home.htm
+- type: APIReference
+  url: https://developers.flywire.com/education/Content/api-reference.htm
+- type: GettingStarted
+  url: https://developers.flywire.com/education/Content/api-basics.htm
+- type: StatusPage
+  url: https://status.flywire.com/
+- type: TermsOfService
+  url: https://www.flywire.com/legal/terms-of-use
+- type: PrivacyPolicy
+  url: https://www.flywire.com/legal/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/peertransfer
+- type: Compliance
+  url: https://www.flywire.com/company/security
+- type: Security
+  url: https://app.intigriti.com/programs/flywire/flywirevulnerabilitydiscloseprogram/
+- type: Packages
+  url: packages/flywire-packages.yml
+- type: SDKs
+  url: packages/flywire-packages.yml
+- type: Components
+  url: components/flywire-components.yml
+- type: Sandbox
+  url: sandbox/flywire-sandbox.yml
+- type: Authentication
+  url: authentication/flywire-authentication.yml
+- type: Conventions
+  url: conventions/flywire-conventions.yml
+- type: ErrorCatalog
+  url: errors/flywire-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/flywire-lifecycle.yml
+- type: Webhooks
+  url: asyncapi/flywire-payments-webhooks.yml
+- type: Conformance
+  url: conformance/flywire-conformance.yml
+- type: DataModel
+  url: data-model/flywire-data-model.yml
+- type: WellKnown
+  url: well-known/flywire-well-known.yml
+- type: SecurityTxt
+  url: well-known/flywire-security.txt
+- type: VulnerabilityDisclosure
+  url: security/flywire-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/flywire-domain-security.yml
+- type: MCPServer
+  url: mcp/flywire-mcp.yml
+- type: LLMsTxt
+  url: llms/flywire-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

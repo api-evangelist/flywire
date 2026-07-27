@@ -1,0 +1,41 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.flywire.com/.well-known/
+notes: >-
+  Only the RFC 9116 security.txt is published. OIDC/OAuth authorization-server,
+  api-catalog and ai-plugin.json discovery documents are not served on the
+  website, developer portal, or the api-platform payment hosts (all 404). The
+  Flywire Payments API authorizes with a static API key header, not OAuth/OIDC,
+  so no authorization-server metadata is expected.
+hosts:
+- host: https://www.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: flywire-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://api-platform.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+- host: https://api-platform-sandbox.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+- host: https://developers.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404

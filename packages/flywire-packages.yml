@@ -1,0 +1,48 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.npmjs.com/search?q=%40flywire
+notes: >-
+  Flywire publishes first-party client-side JavaScript/React libraries under the
+  @flywire npm scope (source repos live in the github.com/peertransfer org,
+  Flywire's original company name). These are browser/front-end libraries for
+  embedding Flywire Elements/Checkout, not server-side SDKs. No first-party
+  Python, Java, Go, Ruby, PHP, .NET or Rust package was found on PyPI, Maven
+  Central, pkg.go.dev, RubyGems, Packagist, NuGet or crates.io.
+packages:
+- language: javascript
+  registry: npm
+  name: "@flywire/flywire-js"
+  url: https://www.npmjs.com/package/@flywire/flywire-js
+  install: npm install @flywire/flywire-js
+  version: 0.0.6
+  license: MIT
+  repository: https://github.com/peertransfer/flywire-js
+  description: Flywire JavaScript client
+  official: true
+- language: javascript
+  registry: npm
+  name: "@flywire/react-flywire-js"
+  url: https://www.npmjs.com/package/@flywire/react-flywire-js
+  install: npm install @flywire/react-flywire-js
+  version: 1.0.5
+  license: MIT
+  repository: https://github.com/peertransfer/react-flywire-js
+  description: React components for Flywire
+  official: true
+- language: javascript
+  registry: npm
+  name: "@flywire/flywire-fetch"
+  url: https://www.npmjs.com/package/@flywire/flywire-fetch
+  install: npm install @flywire/flywire-fetch
+  version: 0.0.2
+  license: MIT
+  repository: https://github.com/peertransfer/flywire-fetch
+  description: Flywire's fetch wrapper
+  official: true
+- language: javascript
+  registry: npm
+  name: flystyles
+  url: https://www.npmjs.com/package/flystyles
+  install: npm install flystyles
+  description: Flywire UI Framework
+  official: true

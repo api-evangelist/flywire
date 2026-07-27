@@ -1,0 +1,37 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.flywire.com/company/security
+notes: >-
+  Standards/compliance posture. Payment-security and data-protection
+  certifications are published on Flywire's security page; API-level conventions
+  (RFC 7807 errors, API-key auth) are captured from the developer docs.
+standards:
+- id: pci-dss
+  conforms: true
+  level: Level 1
+  evidence: >-
+    Flywire is PCI DSS Level 1 certified, reviewed annually by a third-party
+    auditor; named to the PCI SSC 2025-2027 Board of Advisors.
+  source: https://www.flywire.com/company/security
+- id: soc2-type2
+  conforms: true
+  evidence: Annual SOC 2 Type II audit.
+  source: https://www.flywire.com/company/security
+- id: iso-27001
+  conforms: true
+  evidence: Certified under ISO/IEC 27001:2013 (Information Security Management System).
+  source: https://www.flywire.com/company/security
+- id: gdpr
+  conforms: true
+  evidence: Handles customer data in compliance with GDPR (and PIPEDA, FERPA, GLBA).
+  source: https://www.flywire.com/company/security
+- id: rfc7807-problem-details
+  conforms: true
+  evidence: API error responses use the RFC 7807 problem+json shape (type/title/status/detail/errors).
+  source: https://developers.flywire.com/education/Content/error-handling.htm
+- id: oauth2
+  conforms: false
+  evidence: API uses a static API-key header, not OAuth2.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Docs reference RFC 7807 (the predecessor), not RFC 9457.

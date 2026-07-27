@@ -1,0 +1,44 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: https://developers.flywire.com/education/Content/resource_payments.htm
+notes: >-
+  No official Flywire MCP server was found (checked docs, the @modelcontextprotocol
+  npm scope, and MCP registries). This is a CANDIDATE tool surface derived from
+  the documented Payments API operations to seed a future MCP server. Flywire
+  publishes no OpenAPI, so source_operation references point at the docs.
+server:
+  name: flywire-payments
+  transport: http
+  url: null
+auth:
+  type: apiKey
+  header: X-Authentication-Key
+tools:
+- name: create_payment
+  description: Create a payment (charge).
+  source_operation: "POST /payments/v1/payments/charge"
+- name: list_payments
+  description: List payments with page/per_page pagination.
+  source_operation: "GET /payments/v1/payments"
+- name: get_payment
+  description: Get the details of a payment by id.
+  source_operation: "GET /payments/v1/payments/{paymentID}"
+- name: get_payment_receipt
+  description: Get the receipt for a payment.
+  source_operation: "GET /payments/v1/payments/{paymentID}/receipt"
+- name: capture_payment
+  description: Capture a pre-authorization.
+  source_operation: "POST /payments/v1/payments/{paymentID}/captures"
+- name: adjust_authorization
+  description: Adjust a pre-authorization amount.
+  source_operation: "POST /payments/v1/payments/{paymentID}/authorization_adjustments"
+- name: process_payment
+  description: Mark a payment as processed.
+  source_operation: "POST /payments/v1/payments/{paymentID}/process"
+- name: cancel_payment
+  description: Cancel a payment.
+  source_operation: "POST /payments/v1/payments/{paymentID}/cancel"
+- name: create_refund
+  description: Create a refund against a payment.
+  source_operation: "POST /payments/v1/payments/{paymentID}/refunds"

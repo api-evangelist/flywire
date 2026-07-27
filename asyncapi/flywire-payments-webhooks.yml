@@ -1,0 +1,66 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/notifications-payment-status.htm
+spec_type: Webhooks
+notes: >-
+  Flywire documents webhook callbacks ("Payment Status Notifications") but does
+  not publish a machine-readable AsyncAPI document, so this captures the webhook
+  event catalog rather than an AsyncAPI spec. For each payment status change the
+  Flywire platform sends a POST (JSON) to the merchant-registered callback URL.
+delivery:
+  transport: https-webhook
+  method: POST
+  content_type: application/json
+  callback_url: >-
+    Publicly reachable URL registered per application, or per-payment via the
+    notifications_url field on payment creation.
+  signature:
+    header: X-Flywire-Digest
+    algorithm: base64-encoded HMAC-SHA256 of the request body using the Shared Secret
+    secret: Shared Secret issued at application registration
+envelope_fields:
+- event_type
+- event_date
+- event_resource
+- data
+data_fields:
+- payment_id
+- amount_from
+- currency_from
+- amount_to
+- currency_to
+- status
+- expiration_date
+- external_reference
+- country
+- payment_method
+- fields
+- payer
+events:
+- type: initiated
+  resource: payment
+  description: New payment created.
+- type: processed
+  resource: payment
+  description: Funds received or captured.
+- type: guaranteed
+  resource: payment
+  description: Funds validated and guaranteed.
+- type: delivered
+  resource: payment
+  description: Funds disbursed in batch.
+- type: cancelled
+  resource: payment
+  description: Payment will not process.
+- type: reversed
+  resource: payment
+  description: Refund completed (direct debit only).
+- type: authorized
+  resource: charge
+  description: Pre-authorization hold placed.
+- type: adjusted
+  resource: charge
+  description: Pre-authorization amount modified.
+- type: failed
+  resource: charge
+  description: Capture issue occurred.

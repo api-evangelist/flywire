@@ -1,0 +1,123 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/sandbox_one-off-payments-elements.htm
+environments:
+  live:
+    base_url: https://api-platform.flywire.com/payments/v1/
+  sandbox:
+    base_url: https://api-platform-sandbox.flywire.com/payments/v1/
+notes: >-
+  Test vs live is separated by base host (api-platform-sandbox.flywire.com vs
+  api-platform.flywire.com) and by the API key issued for each environment.
+  Payment outcomes in the sandbox are driven by "magic value" cardholder names,
+  not by the card number. All values below are published verbatim by Flywire.
+test_cards:
+- network: Visa
+  number: "4010 1000 0000 0016"
+  expiry: "03/30"
+  cvv: "737"
+  currency: EUR
+  country: DE
+  type: debit
+- network: Visa
+  number: "4988 4388 4000 0012"
+  expiry: "03/30"
+  cvv: "737"
+  currency: EUR
+  country: ES
+  type: debit
+- network: Visa
+  number: "4242 4201 0000 0017"
+  expiry: "03/30"
+  cvv: "737"
+  currency: GBP
+  country: GB
+  type: credit
+- network: Visa
+  number: "4761 3600 0000 0017"
+  expiry: "03/30"
+  cvv: "737"
+  currency: INR
+  country: IN
+  type: debit
+- network: Visa
+  number: "4111 1111 1111 1111"
+  expiry: "03/30"
+  cvv: "737"
+  currency: USD
+  country: US
+  type: credit
+- network: Mastercard
+  number: "2222 4000 1000 0016"
+  expiry: "03/30"
+  cvv: "737"
+  currency: CAD
+  country: CA
+  type: credit
+- network: Mastercard
+  number: "5163 6136 0000 0014"
+  expiry: "03/30"
+  cvv: "737"
+  currency: AUD
+  country: AU
+  type: debit
+- network: Mastercard
+  number: "5252 5202 0000 0017"
+  expiry: "03/30"
+  cvv: "737"
+  currency: JPY
+  country: JP
+  type: debit
+- network: Mastercard
+  number: "5454 5454 5454 5454"
+  expiry: "03/30"
+  cvv: "737"
+  currency: USD
+  country: US
+  type: credit
+- network: Amex
+  number: "3700 0000 0000 002"
+  expiry: "03/30"
+  cvv: "7373"
+  currency: USD
+  country: US
+  type: credit
+magic_values:
+  field: cardholder name (first + last)
+  description: >-
+    The cardholder name entered in the sandbox determines the 3DS behaviour,
+    success/failure, and resulting payment status flow.
+  values:
+  - first_name: MAGICVALUE
+    last_name: AUTH
+    triggers_3ds: true
+    success: true
+    status_flow: Initiated -> Processed -> Guaranteed
+  - first_name: MAGICVALUE
+    last_name: APPROVED
+    triggers_3ds: false
+    success: true
+    status_flow: Initiated -> Processed -> Guaranteed
+  - first_name: PAYMENT
+    last_name: DELIVERED
+    triggers_3ds: false
+    success: true
+    status_flow: Initiated -> Processed -> Guaranteed -> Delivered
+  - first_name: MAGICVALUE
+    last_name: EXPIRED
+    triggers_3ds: false
+    success: false
+    status_flow: Initiated -> Failed
+  - first_name: MAGICVALUE
+    last_name: FRAUD
+    triggers_3ds: false
+    success: false
+    status_flow: Initiated -> Failed
+  - first_name: MAGICVALUE
+    last_name: "NOT ENOUGH BALANCE"
+    triggers_3ds: false
+    success: false
+    status_flow: Initiated -> Failed
+threeds:
+  password: password
+  note: For scenarios that trigger 3DS, enter "password" in the password field to complete authentication.

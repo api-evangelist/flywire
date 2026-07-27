@@ -1,0 +1,54 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/api-basics.htm
+notes: >-
+  Cross-cutting request/response semantics for the Flywire Payments API, captured
+  from the developer docs. Idempotency is NOT documented by Flywire, so no
+  Idempotency pointer is emitted.
+authentication:
+  style: api-key-header
+  header: X-Authentication-Key
+  ref: authentication/flywire-authentication.yml
+content_type:
+  request: application/json
+  response: application/json
+versioning:
+  scheme: uri-path
+  current: v1
+  policy: >-
+    A new version is created only for breaking changes; non-breaking additions
+    are made without a version bump.
+  ref: lifecycle/flywire-lifecycle.yml
+pagination:
+  style: page-number
+  params:
+    page:
+      default: 1
+    per_page:
+      default: 10
+      min: 1
+      max: 100
+  response_fields:
+  - total_entries
+  - total_pages
+  - page
+  - per_page
+idempotency:
+  supported: false
+  note: Flywire does not document an idempotency key mechanism.
+rate_limiting:
+  limit: 500 requests per minute
+  scope: per IP address
+  exceeded_status: 429
+  penalty: Access blocked for 10 minutes after the limit is exceeded.
+  ref: null
+error_envelope:
+  format: rfc7807
+  media_type: application/problem+json
+  fields: [type, title, status, detail, errors]
+  errors_item_fields: [source, param, type, message]
+  ref: errors/flywire-problem-types.yml
+webhooks:
+  supported: true
+  signature_header: X-Flywire-Digest
+  ref: asyncapi/flywire-payments-webhooks.yml

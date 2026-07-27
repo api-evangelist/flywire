@@ -1,0 +1,18 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.flywire.com/education/Content/api-basics.htm
+versioning:
+  scheme: uri-path
+  current: v1
+  policy: >-
+    Flywire creates a new API version only for breaking changes; non-breaking
+    additions are released without a version bump.
+  docs: https://developers.flywire.com/education/Content/api-basics.htm
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: No formal deprecation policy or RFC 8594 Sunset/Deprecation header support is documented.
+sla:
+  url: null
+status_page: https://status.flywire.com/
+deprecated_operations: []
