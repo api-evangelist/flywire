@@ -87,6 +87,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Blog
+  url: https://www.flywire.com/company/news
 - type: TrustCenter
   url: security/flywire-trust-center.yml
 - type: Website
