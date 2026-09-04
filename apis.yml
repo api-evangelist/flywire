@@ -36,19 +36,24 @@ deliveryModel:
   method: derived
 accessModel:
   pricing: unknown
-  onboarding: self-serve
+  onboarding: approval
   trial: false
   try_now: false
   public: false
-  label: Self-serve signup
+  label: Requires approval
   confidence: medium
   source:
+  - plans
   - authentication
-  generated: '2026-07-22'
+  - scopes
+  - rate-limits
+  - security
+  - sandbox
+  generated: '2026-09-03'
   method: derived
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-09-02'
 tags:
 - Company
 - Payments
@@ -101,8 +106,73 @@ apis:
     url: conventions/flywire-conventions.yml
   - type: DataModel
     url: data-model/flywire-data-model.yml
-  - type: MCPServer
+  - type: X-MCPServerCandidate
     url: mcp/flywire-mcp.yml
+    note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  - type: RateLimits
+    url: rate-limits/flywire-rate-limits.yml
+- name: Flywire Invoicing API
+  description: >-
+    REST API for the Flywire Invoicing Platform — contacts, invoices, credit
+    notes and invoice payments for a company, with search, count and export on
+    each resource. Authorized with OAuth 2.0 client credentials and enforced on
+    two axes: the token must carry the scope for the resource and operation, and
+    it must be scoped to the company named in the URL. Documented on Flywire's
+    Solutions documentation estate, separately from the Payments API.
+  humanURL: https://solutions.flywire.com/en/invoicing/invoicing-api
+  baseURL: https://invoicing.flywire.com
+  tags:
+  - Invoicing
+  - Accounts Receivable
+  - B2B Payments
+  - Credit Notes
+  properties:
+  - type: Documentation
+    url: https://solutions.flywire.com/en/invoicing/invoicing-api
+  - type: APIReference
+    url: https://solutions.flywire.com/en/invoicing/invoicing-api
+  - type: Authentication
+    url: authentication/flywire-authentication.yml
+  - type: OAuthScopes
+    url: scopes/flywire-scopes.yml
+  - type: ErrorCatalog
+    url: errors/flywire-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/flywire-non-payment-webhooks.yml
+  - type: ChangeLog
+    url: changelog/flywire-changelog.yml
+  - type: Conventions
+    url: conventions/flywire-conventions.yml
+  - type: DataModel
+    url: data-model/flywire-data-model.yml
+- name: Flywire Payment Request API
+  description: >-
+    REST API for creating, retrieving, updating and removing payer-facing payment
+    requests for a company, including instalment schedules. Requests are
+    authenticated with an HMAC-SHA256 digest of the request body sent in the
+    X-Flywire-Digest header rather than a bearer token, and the surface has its
+    own invoice/payment-request webhook lifecycle.
+  humanURL: https://solutions.flywire.com/en/payment-requests/payment-request-api
+  baseURL: https://app.flywire.com/rest/payment-request/public/company/
+  tags:
+  - Payment Requests
+  - Instalments
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://solutions.flywire.com/en/payment-requests/payment-request-api
+  - type: APIReference
+    url: https://solutions.flywire.com/en/payment-requests/payment-request-api
+  - type: Authentication
+    url: authentication/flywire-authentication.yml
+  - type: Webhooks
+    url: asyncapi/flywire-non-payment-webhooks.yml
+  - type: ChangeLog
+    url: changelog/flywire-changelog.yml
+  - type: Sandbox
+    url: sandbox/flywire-sandbox.yml
+  - type: Conventions
+    url: conventions/flywire-conventions.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -130,7 +200,7 @@ common:
 - type: PrivacyPolicy
   url: https://www.flywire.com/legal/privacy-policy
 - type: GitHubOrganization
-  url: https://github.com/peertransfer
+  url: https://github.com/flywirecorp
 - type: Compliance
   url: https://www.flywire.com/company/security
 - type: Security
@@ -165,12 +235,27 @@ common:
   url: security/flywire-vulnerability-disclosure.yml
 - type: DomainSecurity
   url: security/flywire-domain-security.yml
-- type: MCPServer
+- type: X-MCPServerCandidate
   url: mcp/flywire-mcp.yml
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
 - type: LLMsTxt
   url: llms/flywire-llms.txt
+- type: ChangeLog
+  url: changelog/flywire-changelog.yml
+- type: RateLimits
+  url: rate-limits/flywire-rate-limits.yml
+- type: Plans
+  url: plans/flywire-plans-pricing.yml
+- type: OAuthScopes
+  url: scopes/flywire-scopes.yml
+- type: Support
+  url: https://www.flywire.com/support
+- type: HelpCenter
+  url: https://help.flywire.com/
+- type: Login
+  url: https://app.flywire.com/
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-09-02'
+  status: enriched
+  artifacts_added: 5
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
