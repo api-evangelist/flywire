@@ -1,0 +1,59 @@
+generated: '2026-09-02'
+method: searched
+source: https://developers.flywire.com/education/Content/api-basics.htm
+docs: https://developers.flywire.com/education/Content/api-basics.htm
+notes: >-
+  Flywire publishes a single, explicit rate limit for the Payments API in the
+  "Rate Limits" section of API Basics. The limit is enforced PER IP ADDRESS, not
+  per application or per API key, and it is identical in production and sandbox.
+  Exceeding it does not merely reject the request: the caller is blocked from the
+  API for 10 minutes. No RateLimit-* / X-RateLimit-* response headers and no
+  Retry-After header are documented, so an agent cannot read remaining quota at
+  runtime — it can only detect the 429 after the fact. The Invoicing API and the
+  Payment Request API (solutions.flywire.com) publish no rate limits at all.
+limit_count: 2
+rate_limits:
+- api: Flywire Payments API
+  environment: production
+  scope: per-ip
+  window: 1 minute
+  limit: 500
+  unit: requests
+  burst: null
+  exceeded_status: 429
+  penalty: Blocked from the Flywire API for 10 minutes after the limit is exceeded.
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+- api: Flywire Payments API
+  environment: sandbox
+  scope: per-ip
+  window: 1 minute
+  limit: 500
+  unit: requests
+  burst: null
+  exceeded_status: 429
+  penalty: Blocked from the Flywire API for 10 minutes after the limit is exceeded.
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+response_headers:
+  documented: false
+  standard_headers: []
+  vendor_headers: []
+  retry_after: false
+  note: >-
+    Flywire documents no rate-limit response headers. The only runtime signal is
+    the 429 problem+json body itself, which carries errors[0].code 1015 and
+    message "You are being rate limited.".
+exhaustion_response:
+  status: 429
+  media_type: application/problem+json
+  title: Too Many Requests
+  detail: Rate Limit Exceeded
+  error_code: 1015
+  error_message: You are being rate limited.
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+undocumented_surfaces:
+- api: Flywire Invoicing API
+  host: invoicing.flywire.com
+  note: No rate limits documented at https://solutions.flywire.com/en/invoicing/invoicing-api
+- api: Flywire Payment Request API
+  host: app.flywire.com
+  note: No rate limits documented at https://solutions.flywire.com/en/payment-requests/payment-request-api

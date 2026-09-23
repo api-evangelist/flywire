@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/api-landing-page.htm
 notes: >-
@@ -32,3 +32,52 @@ loader_libraries:
   url: https://www.npmjs.com/package/@flywire/flywire-js
 - name: "@flywire/react-flywire-js"
   url: https://www.npmjs.com/package/@flywire/react-flywire-js
+
+hosted_loader:
+  name: Flywire Checkout loader
+  script: https://checkout.flywire.com/flywire-payment.js
+  distribution: cdn
+  pinnable: false
+  global: window.FlywirePayment
+  api:
+    initiate: window.FlywirePayment.initiate(config) — returns a modal handle
+    modal_methods: [render(), close()]
+  config_parameters:
+  - env (demo | prod)
+  - recipientCode (3-letter portal code)
+  - amount
+  - returnUrl / onCompleteCallback
+  - requestPayerInfo / requestRecipientInfo
+  - nonce / callbackUrl / callbackId / callbackVersion
+  - skipCompletedSteps / readonlyFields / paymentOptionsConfig / locale / payables
+  - showLiveChat / payerEmailNotifications / embedTo
+  note: >-
+    Added 2026-09-02. This is the loader the developers.flywire.com documentation
+    actually embeds (its home page carries a <script src> to it), and it is the
+    only distribution channel for the Checkout component — there is no npm package
+    for it. It is served from a version-less path with Cache-Control: no-store, so
+    integrators cannot pin a version and cannot tell when it changes; the only
+    signal is the Last-Modified header (Tue, 01 Sep 2026 12:50:21 GMT when probed).
+  probe:
+    url: https://checkout.flywire.com/flywire-payment.js
+    status: 200
+    last_modified: 'Tue, 01 Sep 2026 12:50:21 GMT'
+    checked: '2026-09-02'
+  docs: https://solutions.flywire.com/en/checkout/implementation
+additional_surfaces:
+- name: Payment Request Template Links
+  description: >-
+    Shareable payer-facing payment request links generated from a template;
+    replaced Dynamic Links, which were deprecated 2024-05-08.
+  docs: https://solutions.flywire.com/en/payment-requests/template-links
+  generator: https://solutions.flywire.com/en/payment-requests/template-link-generator
+- name: Dynamic Links
+  description: Deprecated link surface, superseded by Payment Request Template Links.
+  deprecated: true
+  docs: https://solutions.flywire.com/en/dynamic-links/dynamic-links
+- name: Flywire Dashboard
+  description: Client-facing dashboard for viewing payments and managing portals; some permissions belong to dashboard users and are not reachable by an application token.
+  docs: https://solutions.flywire.com/en/dashboard
+- name: Flywire Connectors
+  description: Pre-built connectors for integrating existing ERP/SIS systems without writing API code.
+  docs: https://developers.flywire.com/education/Content/connectors-landing-page.htm

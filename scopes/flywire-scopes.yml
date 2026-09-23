@@ -1,0 +1,109 @@
+generated: '2026-09-02'
+method: searched
+source: https://solutions.flywire.com/en/invoicing/invoicing-api
+docs: https://solutions.flywire.com/en/invoicing/invoicing-api
+notes: >-
+  OAuth 2.0 scopes apply to the Flywire INVOICING API only. Flywire runs three
+  different authorization models across three APIs, and only this one has scopes:
+  the Payments API (api-platform.flywire.com) uses a static X-Authentication-Key
+  header with no scope surface, and the Payment Request API (app.flywire.com) uses
+  an HMAC-SHA256 request digest. Scopes are granted to an APPLICATION at
+  registration — there is no consent screen, no authorization-code flow and no
+  user-delegated grant; the only flow is client_credentials. There is also no
+  published OAuth discovery document: /.well-known/oauth-authorization-server and
+  /.well-known/openid-configuration 404 on api.flywire.com, invoicing.flywire.com,
+  app.flywire.com and www.flywire.com (probed 2026-09-02), so an agent cannot
+  discover these scopes at runtime — they exist only in prose on this page.
+  Derived baseline could not be produced: Flywire publishes no OpenAPI, so
+  derive-oauth-scopes.py returned zero schemes. Every scope below is read verbatim
+  from the provider's own scope table.
+api: Flywire Invoicing API
+oauth:
+  version: '2.0'
+  grant_types: [client_credentials]
+  token_endpoint: https://api.flywire.com/oauth/token
+  token_request_content: JSON body with grant_type, client_id, client_secret
+  token_response_fields: [access_token, expires_in]
+  token_use: 'Authorization: Bearer {access_token}'
+  discovery_document: null
+  registration: Manual — scopes are granted to the application when Flywire registers it.
+scope_count: 16
+scopes:
+- name: invoicing.contact.read
+  grants: 'Contacts: search, read, count'
+  resource: contact
+  access: read
+- name: invoicing.contact.write
+  grants: 'Contacts: create, update, delete'
+  resource: contact
+  access: write
+- name: invoicing.invoice.read
+  grants: 'Invoices: search, read, count, export'
+  resource: invoice
+  access: read
+- name: invoicing.invoice.write
+  grants: 'Invoices: create, update, delete, send reminders'
+  resource: invoice
+  access: write
+- name: invoicing.creditnote.read
+  grants: 'Credit notes: search, read, count'
+  resource: creditnote
+  access: read
+- name: invoicing.creditnote.write
+  grants: 'Credit notes: create, update, delete, allocate'
+  resource: creditnote
+  access: write
+- name: invoicing.payments.read
+  grants: 'Payments: search, read, export'
+  resource: payments
+  access: read
+- name: invoicing.payments.write
+  grants: 'Payments: record manual payments, initiate payments, delete'
+  resource: payments
+  access: write
+- name: invoicing.company.read
+  grants: Company, company settings, pay now codes, bank accounts, predefined services
+  resource: company
+  access: read
+- name: invoicing.company.update
+  grants: Company settings and webhook subscriptions
+  resource: company
+  access: write
+- name: invoicing.company.write
+  grants: Company creation
+  resource: company
+  access: write
+- name: invoicing.payment_method.read
+  grants: Stored payer payment methods (read)
+  resource: payment_method
+  access: read
+- name: invoicing.payment_method.write
+  grants: Stored payer payment methods (write)
+  resource: payment_method
+  access: write
+- name: invoicing.payment.charge
+  grants: Charging a stored payment method
+  resource: payment
+  access: write
+- name: invoicing.payment_request.read
+  grants: Payment requests (read)
+  resource: payment_request
+  access: read
+- name: invoicing.payment_request.write
+  grants: Payment requests (write)
+  resource: payment_request
+  access: write
+authorization_axes:
+- axis: scope
+  rule: The token must carry the scope for the resource and operation.
+  failure: 403 with no body
+- axis: company
+  rule: >-
+    The token must be scoped to the company in the URL. The :reference path
+    segment is matched against the accounts the token was issued for; a token for
+    another company gets 403, whatever its scopes.
+  failure: 403 with no body
+unreachable_operations_note: >-
+  Permissions that belong to dashboard users (rather than to applications) are
+  never granted to an application token — an operation that requires one is not
+  reachable through the API at all.

@@ -1,10 +1,18 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/api-reference.htm
 notes: >-
-  Entity-relationship graph for the Flywire Payments API, captured from the
-  documented resources and payment operations (no OpenAPI is published, so
-  relationships are read from the docs rather than $ref-derived).
+  Entity-relationship graph for the Flywire APIs, captured from the documented
+  resources and operations (no OpenAPI is published on any host, so relationships
+  are read from the docs rather than $ref-derived). UPDATED 2026-09-02 with the
+  Payments API resources missed in the first round (Disbursement, RefundBundle,
+  PaymentMethod, DocumentFile) and with the entities of the two APIs found this
+  round on solutions.flywire.com — Invoicing (Contact, Invoice, CreditNote) and
+  Payment Request. The two estates share vocabulary but not identifiers: the
+  Payments API keys on a payment_reference and a 3- or 5-character recipient ID
+  (portal code), while the Invoicing and Payment Request APIs key on a company
+  :reference path segment that the token must also be scoped to. Nothing in the
+  documentation maps one to the other.
 entities:
 - name: Recipient
   description: The organization receiving funds (e.g. a university, hospital, business). Common to all payment types.
@@ -26,6 +34,64 @@ entities:
   description: Resource for 529 payments.
 - name: Document
   description: A file uploaded/downloaded in association with a payment.
+- name: DocumentFile
+  description: An individual uploaded file attached to a payment Document.
+  api: payments
+- name: RefundBundle
+  description: >-
+    The unit Flywire actually processes refunds in. Creating a refund for a
+    recipient automatically creates or joins that recipient's open bundle;
+    refunds accumulate until the recipient's cut-off time, then the bundle is
+    approved (manually or automatically) and processed.
+  id_field: bundleID
+  api: payments
+- name: PaymentMethod
+  description: A stored, tokenized payer payment method.
+  id_field: token
+  api: payments
+- name: Disbursement
+  description: >-
+    A daily batch payout of collected funds to the client, with its own files,
+    refunds, payouts and adjustments sub-collections. This is the reconciliation
+    side of the model and was missing from the first round.
+  id_field: disbursementId
+  api: payments
+- name: Payout
+  description: An individual payout inside a disbursement.
+  api: payments
+- name: Adjustment
+  description: An adjustment applied to a disbursement.
+  api: payments
+- name: Company
+  description: >-
+    The tenant of the Invoicing and Payment Request APIs, addressed by a
+    :reference (or :public_reference) path segment that the access token must be
+    scoped to. Not the same identifier as the Payments API recipient/portal code.
+  id_field: reference
+  api: invoicing, payment_request
+- name: Contact
+  description: A payer company or person invoices are issued to.
+  api: invoicing
+- name: Invoice
+  description: >-
+    An invoice with instalments, late-fee rules, a service interval and a public
+    ID for payer-facing retrieval.
+  id_field: id
+  reference_field: publicId
+  api: invoicing
+- name: CreditNote
+  description: >-
+    A credit note allocatable against invoices. Allocation is REPLACE semantics,
+    not additive.
+  id_field: id
+  reference_field: publicId
+  api: invoicing
+- name: PaymentRequest
+  description: >-
+    A payer-facing request for payment, optionally split into instalments, with
+    its own viewed/paid/cancelled webhook lifecycle.
+  id_field: payment_request_id
+  api: payment_request
 relationships:
 - from: Payment
   to: Recipient
@@ -63,6 +129,54 @@ relationships:
   to: Document
   type: has_many
   via: payment
+- from: Refund
+  to: RefundBundle
+  type: belongs_to
+  via: bundleID (a refund is always in a bundle, even a bundle of one)
+- from: RefundBundle
+  to: Recipient
+  type: belongs_to
+  via: recipient (bundles are recipient-specific; cut-off time and approval type are recipient settings)
+- from: PaymentMethod
+  to: Payor
+  type: belongs_to
+  via: payorId (GET /payors/{payorId}/payment_methods/{token})
+- from: DocumentFile
+  to: Document
+  type: belongs_to
+  via: documentID
+- from: Document
+  to: Payment
+  type: belongs_to
+  via: paymentID
+- from: Disbursement
+  to: Payout
+  type: has_many
+  via: /disbursements/{disbursementId}/payouts
+- from: Disbursement
+  to: Refund
+  type: has_many
+  via: /disbursements/{disbursementId}/refunds
+- from: Disbursement
+  to: Adjustment
+  type: has_many
+  via: /disbursements/{disbursementId}/adjustments
+- from: Invoice
+  to: Company
+  type: belongs_to
+  via: ':reference path segment'
+- from: Invoice
+  to: Contact
+  type: belongs_to
+  via: contact
+- from: CreditNote
+  to: Invoice
+  type: has_many
+  via: allocations (POST /creditnote/:id/allocate — REPLACES the allocation set)
+- from: PaymentRequest
+  to: Company
+  type: belongs_to
+  via: ':public_reference path segment'
 operations:
 - {method: POST, path: "/payments/charge", summary: Create a payment (charge)}
 - {method: GET, path: "/payments", summary: List payments}
@@ -73,3 +187,24 @@ operations:
 - {method: POST, path: "/payments/{paymentID}/process", summary: Mark payment as processed}
 - {method: POST, path: "/payments/{paymentID}/cancel", summary: Cancel a payment}
 - {method: POST, path: "/payments/{paymentID}/refunds", summary: Create a refund}
+
+identifier_formats:
+- entity: Payment
+  field: payment_reference
+  format: 'Either ABC123456789 (3-letter portal/recipient ID + 9 digits) or 1AB12CD452ABC1D (digit + 8 alphanumerics + digit + 5-alphanumeric portal ID)'
+  source: https://developers.flywire.com/education/Content/resource_payments.htm
+- entity: Recipient
+  field: recipient ID (portal code)
+  format: 'Either 3 letters (ABC) or 5 alphanumerics starting with a letter (ABC1D)'
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+- entity: CheckoutSession
+  field: sessionID
+  format: UUID (example 494d2e9d-c0c9-407c-9094-5b3b2a02c00f)
+  source: https://developers.flywire.com/education/Content/resource_checkout-sessions.htm
+cross_estate_gap:
+  note: >-
+    The Payments API (developers.flywire.com) and the Invoicing / Payment Request
+    APIs (solutions.flywire.com) are documented as separate products with separate
+    identifier spaces, separate auth and separate error envelopes. No published
+    document maps a Payments recipient/portal code to an Invoicing company
+    :reference, so a client operating both must maintain that mapping itself.

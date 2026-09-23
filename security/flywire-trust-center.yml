@@ -1,20 +1,14 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 probe: true
-source: https://www.flywire.com/company/security
-url: https://www.flywire.com/company/security
+source: https://www.flywire.com/
+url: https://www.flywire.com/
 certifications:
-- PCI DSS Level 1
-- SOC 2 Type II
-- ISO/IEC 27001:2013
-- GDPR
+- SOC 2
+- PCI DSS
 evidence:
-- source: https://www.flywire.com/company/security
+- source: https://www.flywire.com/
   keywords:
-  - pci dss level 1
-  - soc 2 type ii
-  - iso 27001
-  - gdpr
-- source: https://www.flywire.com/news/flywire-named-to-pci-security-standards-council-2025-2027-board-of-advisors
-  keywords:
-  - pci security standards council board of advisors
+  - soc 2
+  - soc2
+  - pci dss

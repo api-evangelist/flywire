@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/api-basics.htm
 versioning:
@@ -11,8 +11,64 @@ versioning:
 deprecation:
   policy_url: null
   sunset_header: null
-  note: No formal deprecation policy or RFC 8594 Sunset/Deprecation header support is documented.
+  rfc8594: false
+  note: >-
+    Flywire publishes no formal deprecation policy, no sunset dates and no RFC 8594
+    Sunset/Deprecation response headers. It does, however, DEPRECATE THINGS IN
+    PRACTICE, announced only in the change log and in a "Deprecated" section of the
+    Solutions documentation navigation — a consumer has to read release notes to
+    learn a surface is going away, and is never told when it will stop working.
+  announced_deprecations:
+  - surface: Payment Notifications v.1
+    kind: webhook-contract
+    announced: null
+    evidence: >-
+      solutions.flywire.com carries "Payment Notifications v.1" under an explicit
+      "Deprecated" navigation section; v2 is the documented current version,
+      selected with the callbackVersion parameter.
+    sunset_date: null
+    docs: https://solutions.flywire.com/en/webhooks/notifications-v1
+  - surface: Dynamic Links
+    kind: product-surface
+    announced: '2024-05-08'
+    evidence: 'Change Log 2024-05-08: "Deprecated Dynamic Links". Replaced by Payment Request Template Links.'
+    sunset_date: null
+    docs: https://solutions.flywire.com/en/revisions/change-log
+  - surface: Scheduled payment webhook notifications
+    kind: events
+    announced: '2023-07-19'
+    evidence: 'Change Log 2023-07-19: "Deprecated all scheduled payment webhook notifications".'
+    sunset_date: null
+    events: [scheduled_payment.installment_paid, scheduled_payment.installment_failed]
+    docs: https://solutions.flywire.com/en/webhooks/non-payment-webhooks
 sla:
   url: null
+  note: No published SLA or uptime commitment was found on flywire.com, developers.flywire.com, solutions.flywire.com or status.flywire.com.
 status_page: https://status.flywire.com/
+status_page_probe:
+  url: https://status.flywire.com/
+  status: 200
+  checked: '2026-09-02'
+changelog:
+  url: https://solutions.flywire.com/en/revisions/change-log
+  ref: changelog/flywire-changelog.yml
+  latest_entry: '2026-08-19'
+  note: >-
+    The change log lives on the Solutions doc site only. developers.flywire.com —
+    where the Payments API is documented — has no change log at all, just a
+    "This documentation was last updated on August 19, 2026" footer.
+documentation_freshness:
+- site: developers.flywire.com
+  stamp: '2026-08-19'
+  kind: footer "last updated on" stamp, no history
+- site: solutions.flywire.com
+  stamp: '2026-08-19'
+  kind: dated change log with 13 entries back to 2021-11-26
+breaking_changes_observed:
+- date: '2022-04-06'
+  change: >-
+    Payments no longer trigger an initiated callback when held — they now go to
+    cancelled or delivered as appropriate. A behavioural change to the event
+    stream, shipped without a version bump.
+  source: https://solutions.flywire.com/en/revisions/change-log
 deprecated_operations: []

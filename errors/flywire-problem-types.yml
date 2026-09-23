@@ -1,7 +1,8 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/error-handling.htm
 format: rfc7807
+envelopes_count: 3
 notes: >-
   Flywire returns RFC 7807 problem+json error objects. The envelope carries
   type, title, status, detail and an errors[] array; each errors[] item carries
@@ -46,3 +47,94 @@ field_error_types:
 - missing_param
 - invalid_param
 - invalid_email
+
+rate_limit_error:
+  status: 429
+  title: Too Many Requests
+  detail: Rate Limit Exceeded
+  errors:
+  - code: 1015
+    message: You are being rate limited.
+  note: >-
+    The only numeric error code Flywire publishes anywhere. Note the shape
+    difference: this errors[] item carries code/message, not the
+    source/param/type/message documented for field validation errors.
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+invoicing_api_errors:
+  api: Flywire Invoicing API
+  host: invoicing.flywire.com
+  source: https://solutions.flywire.com/en/invoicing/invoicing-api
+  uses_payments_envelope: false
+  media_types:
+  - application/vnd.flywire.invoicing.error.v1+json
+  - application/json
+  - text/plain
+  body_shapes:
+  - shape: validation-faults
+    fields: [status, faults, faultsKeys, entityIds, failedEntityIds]
+    media_type: application/vnd.flywire.invoicing.error.v1+json
+    note: faults is a list of message strings, one per fault.
+    example: '{"status": 400, "faults": ["Sum of instalments is different than the amount of the invoice."]}'
+  - shape: unhandled-condition
+    fields: [status, message, ids]
+    media_type: application/json
+    example: '{"status": 400, "message": "no configuration was defined for ''STATIC'' payment method", "ids": null}'
+  - shape: no-body
+    fields: []
+    note: >-
+      Most 401, 403, 404 and 409 responses carry NO body at all. Do not assume a
+      JSON body is present; check the status code first. A 401 puts its reason in
+      the WWW-Authenticate header instead
+      (Bearer error="invalid_token", error_description="Provided token isn't active").
+  - shape: parser-rejection
+    media_type: text/plain
+    note: A body that is not valid JSON is rejected before it reaches the API and returns 400 as text/plain with the parser's own message.
+  problems:
+  - status: 400
+    title: Bad request
+    detail: Request not formatted correctly, or a data validation / business rule failed. Not retryable without changing the request.
+  - status: 401
+    title: Unauthorized
+    detail: Missing, invalid or expired access token. No body; the reason is in the WWW-Authenticate header.
+  - status: 403
+    title: Forbidden
+    detail: >-
+      The token is valid but not allowed to perform the request — it is not scoped
+      to the company in the URL, it lacks the required OAuth scope, or the acting
+      user lacks the permission. Usually no body.
+  - status: 404
+    title: Resource not found
+    detail: >-
+      Unknown URI or resource — OR a search or count that matched no entities.
+      Search endpoints return 404 rather than an empty array. Usually no body.
+  - status: 409
+    title: Conflict
+    detail: The resource already exists (for example a contact for the same payer company, or a payment already recorded for a Flywire payment). No body.
+  - status: 422
+    title: Unprocessable entity
+    detail: Reserved. The Invoicing API returns 400 for validation and business-rule failures; 422 is used only by a small number of endpoints outside the documented resources.
+  - status: 454
+    title: Missing payer fields
+    detail: Returned when a PRE_BOOKING invoice is created for a payer whose profile is missing fields required by the payment processor.
+  - status: 500
+    title: Internal Service Error
+    detail: A generic error message, given when an unexpected condition was encountered.
+  - status: 503
+    title: Service Unavailable
+    detail: The server is currently unavailable. Generally a temporary state.
+  vendor_status_ranges:
+    ranges: [250, 43x, 45x, 55x]
+    note: Flywire-specific status codes for payment-processor conditions. Only 454 is documented by name.
+decline_codes:
+  published: false
+  note: >-
+    Flywire publishes NO decline-code registry. The failed webhook event carries
+    reason and reason_code fields, but no enumeration of reason_code values exists
+    in any Flywire documentation (checked developers.flywire.com and
+    solutions.flywire.com, 2026-09-02). The only decline surface Flywire publishes
+    is in the SANDBOX, as magic-value cardholder last names that force a scenario —
+    CARD EXPIRED, NOT ENOUGH BALANCE and FRAUD — which simulate declines but are
+    not the production codes. errors/<slug>-decline-codes.yml is therefore NOT
+    emitted and no DeclineCodes pointer is wired: there is nothing real to put in it.
+  simulation_values_ref: sandbox/flywire-sandbox.yml
+  source: https://developers.flywire.com/education/Content/testing-card-payments.htm

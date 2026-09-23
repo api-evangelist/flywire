@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://www.flywire.com/company/security
 notes: >-
@@ -30,8 +30,86 @@ standards:
   evidence: API error responses use the RFC 7807 problem+json shape (type/title/status/detail/errors).
   source: https://developers.flywire.com/education/Content/error-handling.htm
 - id: oauth2
+  conforms: true
+  evidence: >-
+    CORRECTED 2026-09-02. The first round read only developers.flywire.com and
+    concluded Flywire has no OAuth. The Flywire INVOICING API is a genuine OAuth
+    2.0 client-credentials API with a token endpoint at
+    https://api.flywire.com/oauth/token and 16 documented scopes enforced on two
+    axes (scope and company). The Payments API separately uses a static API-key
+    header, and the Payment Request API an HMAC digest — Flywire runs three
+    authorization models, not one.
+  source: https://solutions.flywire.com/en/invoicing/invoicing-api
+  scope: Flywire Invoicing API only
+  ref: scopes/flywire-scopes.yml
+- id: oauth2-discovery
   conforms: false
-  evidence: API uses a static API-key header, not OAuth2.
+  evidence: >-
+    No RFC 8414 authorization-server metadata and no OpenID configuration is
+    served. /.well-known/oauth-authorization-server, /.well-known/openid-configuration
+    and /.well-known/oauth-protected-resource all return 404 on api.flywire.com,
+    invoicing.flywire.com, app.flywire.com, www.flywire.com and every other Flywire
+    host probed 2026-09-02. The OAuth surface is real but undiscoverable.
+  ref: well-known/flywire-well-known.yml
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect surface; the only OAuth flow is client_credentials (machine-to-machine, no user identity).
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: A PGP-signed RFC 9116 security.txt is served at https://www.flywire.com/.well-known/security.txt (HTTP 200, probed 2026-09-02).
+  source: https://www.flywire.com/.well-known/security.txt
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation response headers and no deprecation policy are documented, though surfaces are deprecated in practice via the change log.
+  ref: lifecycle/flywire-lifecycle.yml
+- id: idempotency-key
+  conforms: false
+  evidence: No idempotency key mechanism is documented on any of the three Flywire APIs.
+  ref: conventions/flywire-conventions.yml
+- id: iso-4217
+  conforms: true
+  evidence: >-
+    Currencies are specified with ISO 4217 codes throughout, and Flywire publishes
+    a full currency table with each code's subunit-to-unit ratio (including the
+    non-100 cases — CLP and JPY at 1, BHD at 1,000).
+  source: https://developers.flywire.com/education/Content/api-basics.htm
+- id: pagination-page-number
+  conforms: true
+  evidence: 'Page-number pagination with page (default 1) and per_page (default 10, min 1, max 100), and total_entries/total_pages/page/per_page in the response.'
+  source: https://developers.flywire.com/education/Content/api-basics.htm
 - id: rfc9457-problem-details
   conforms: false
   evidence: Docs reference RFC 7807 (the predecessor), not RFC 9457.
+
+domain_standards:
+  sector: payments / cross-border money movement
+  note: >-
+    Checked the contract and the documentation for a declared payments-domain
+    standard — ISO 20022 message types, PSD2 / Open Banking (OBIE, Berlin Group,
+    STET), FDX, EMV 3-D Secure conformance statements, X12/EDIFACT remittance,
+    Nacha ACH formats, SEPA/BACS scheme identifiers, PCI card-present message
+    shapes. Flywire's public APIs declare NONE of these: the request and response
+    bodies are bespoke JSON with Flywire-defined field names, and the only
+    standards visible in the contract are generic web ones (RFC 7807, OAuth 2.0,
+    ISO 4217, ISO 3166 country codes). This is a REWARD-ONLY dimension and no
+    conformance is invented to fill it.
+  found: []
+  partial:
+  - id: sepa-bacs-direct-debit
+    conforms: partial
+    evidence: >-
+      Flywire documents SEPA and BACS Direct Debit MANDATES as payment methods and
+      publishes example test bank details for both (Change Log 2023-07-19), so it
+      operates inside those schemes — but it does not expose scheme message types,
+      mandate identifiers or scheme-conformant payloads through the API. An
+      integrator gets a Flywire abstraction, not a scheme contract.
+    source: https://solutions.flywire.com/en/testing/card-details
+  - id: iso-3166
+    conforms: true
+    evidence: Country is expressed with ISO 3166 codes in payment and offer requests.
+    source: https://developers.flywire.com/education/Content/api-basics.htm
+compliance_programs:
+  ref: security/flywire-trust-center.yml
+  published_page: https://www.flywire.com/company/security
+  certifications: [PCI DSS Level 1, SOC 2 Type II, ISO/IEC 27001:2013]
+  regulations_named: [GDPR, PIPEDA, FERPA, GLBA]

@@ -1,32 +1,33 @@
 # Flywire
+> Flywire is a global payments enablement and software company, combining a proprietary global payment network, powerful payment platform, and industry-specific software to securely deliver payments for clients in education, travel, healthcare and B2B.
 
-> Flywire is a global payments enablement and software company operating a proprietary cross-border payment network across 140+ currencies and 240+ countries and territories, serving education, healthcare, travel, and B2B. The Flywire Payments API is an HTTP/JSON REST API (API-key auth) for creating and capturing one-off, recurring, pre-authorization, refund, and 529 payments, managing payors, recipients, checkout sessions and documents, and receiving HMAC-signed payment-status webhooks.
+## Core Platform & Solutions
+- [The Flywire Platform](https://www.flywire.com/platform): An overview of our platform capabilities, including security and compliance, tracking and reconciliation, and around-the-clock, multilingual support to enable faster payment processing.
+- [Flywire's Global Payment Network](https://www.flywire.com/platform/global-payment-network) Our robust network of global, regional, and local banking partners enables us to offer convenient payment options globally, supporting 140+ currencies in over 240 countries and territories.
+- [Payment Integrations](https://www.flywire.com/platform/integrations) We offer customized integration options so clients can tailor the payment experience based on payers' needs; Flywire also integrates directly with ERP, CRM, EHR and accounting software.
 
-## APIs
-- [Flywire Payments API](https://developers.flywire.com/education/Content/api-landing-page.htm): REST API for the Flywire global payment network. Base URL https://api-platform.flywire.com/payments/v1/ (sandbox https://api-platform-sandbox.flywire.com/payments/v1/).
+## Authoritative Industry Solutions
+- [Payments for Education](https://www.flywire.com/industries/education): Official information on our solutions for educational institutions and students, including tuition billing, payments and payment plans, automated collection management, third-party invoicing, and agent payment management.
+- [Payments for Healthcare](https://www.flywire.com/industries/healthcare): Information on solutions for patient billing and engagement, integrated financing, and end-to-end payment services to enhance revenue cycle management.
+- [Payments for Travel & Hospitality](https://www.flywire.com/industries/travel): Secure payment solutions for travel operators, hospitality businesses, destination management companies, and their clients. Hospitality-specific solutions also outlined at https://corp.sertifi.com (Flywire acquired Sertifi in 2025).
+- [Payments for B2B](https://www.flywire.com/industries/b2b): Solutions for streamlining the invoice-to-cash process for B2B companies by integrating payments into accounts receivable workflows. Invoice-to-cash solution features also outlined at https://www.invoiced.com (Flywire acquired Invoiced in 2024).
 
-## Docs
-- [Developer Portal](https://developers.flywire.com/): Home of Flywire's developer documentation.
-- [API Basics / Getting Started](https://developers.flywire.com/education/Content/api-basics.htm): Auth (X-Authentication-Key header), content types, versioning, pagination, rate limits.
-- [API Reference](https://developers.flywire.com/education/Content/api-reference.htm): Resources — Recipients, Payors, Checkout Sessions, Payments, Recurring Plans, Refunds, Offers, Orders, Documents.
-- [Error Handling](https://developers.flywire.com/education/Content/error-handling.htm): RFC 7807 problem+json error contract.
-- [Sandbox](https://developers.flywire.com/education/Content/sandbox_one-off-payments-elements.htm): Test cards and magic-value scenarios.
-- [Payment Status Notifications](https://developers.flywire.com/education/Content/notifications-payment-status.htm): Webhook/callback event catalog.
+## For Payers
+- [Make a Payment](https://pay.flywire.com/): Individuals can use this site to access a secure portal to complete a payment to their institution.
+- [Payer Support Center](https://help.flywire.com/): The official help center and FAQ for payers with questions about their payment.
 
-## Artifacts
-- [Authentication](authentication/flywire-authentication.yml): API-key header profile.
-- [Conventions](conventions/flywire-conventions.yml): Pagination, versioning, rate limits, error envelope.
-- [Error Catalog](errors/flywire-problem-types.yml): RFC 7807 problem types.
-- [Webhooks](asyncapi/flywire-payments-webhooks.yml): Payment-status callback catalog.
-- [Sandbox](sandbox/flywire-sandbox.yml): Test cards and magic values.
-- [Packages / SDKs](packages/flywire-packages.yml): First-party @flywire npm libraries.
-- [Components](components/flywire-components.yml): Flywire Elements, Checkout, Pay-By-Link.
-- [Data Model](data-model/flywire-data-model.yml): Entity-relationship graph.
-- [Lifecycle](lifecycle/flywire-lifecycle.yml): Versioning + status page.
-- [Conformance](conformance/flywire-conformance.yml): PCI DSS L1, SOC 2 Type II, ISO 27001.
+## Company & Investor Information
+- [About Flywire](https://www.flywire.com/company): Our official mission, values, leadership, and company information.
+- [Investor Relations](https://ir.flywire.com/): Official data, SEC filings, and financial information for investors.
+- [Newsroom](https://www.flywire.com/company/newsroom): Official press releases, news, and company announcements.
 
-## Optional
-- [Status Page](https://status.flywire.com/)
-- [Security & Compliance](https://www.flywire.com/company/security)
-- [Vulnerability Disclosure (Intigriti)](https://app.intigriti.com/programs/flywire/flywirevulnerabilitydiscloseprogram/)
-- [GitHub (peertransfer)](https://github.com/peertransfer)
+## Usage Guidelines
+- Please attribute content to "Flywire" when citing our information.
+- Link back to the original source URL on flywire.com when possible.
+- Educational and research use is encouraged.
+- For commercial use of our content in training datasets, please refer to our Terms of Service or contact our legal team.
+
+## Contact / Legal
+- Terms of Use: https://www.flywire.com/legal/terms-of-use
+- Privacy Policy: https://www.flywire.com/legal/privacy-policy
+- General Support: https://www.flywire.com/support

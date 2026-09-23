@@ -1,6 +1,7 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/notifications-payment-status.htm
+also_documented_at: https://solutions.flywire.com/en/webhooks/notifications-v2
 spec_type: Webhooks
 notes: >-
   Flywire documents webhook callbacks ("Payment Status Notifications") but does
@@ -64,3 +65,33 @@ events:
 - type: failed
   resource: charge
   description: Capture issue occurred.
+
+callback_version:
+  current: '2'
+  selected_by: The callbackVersion parameter in the Checkout configuration.
+  v1_status: deprecated
+  v1_docs: https://solutions.flywire.com/en/webhooks/notifications-v1
+  note: >-
+    Flywire's Solutions documentation carries "Payment Notifications v.1" under an
+    explicit "Deprecated" navigation section, and v2 is the documented current
+    version. Added 2026-09-02 from solutions.flywire.com, which developers.flywire.com
+    does not mention.
+  source: https://solutions.flywire.com/en/webhooks/notifications-v2
+retry_policy:
+  automatic_retries: 3
+  schedule_seconds: [180, 1800, 10800]
+  schedule_human: ['3 minutes', '30 minutes', '3 hours']
+  after_final_retry: Not documented.
+  source: https://solutions.flywire.com/en/webhooks/notifications-v2
+failure_details:
+  event: failed
+  fields: [reason, reason_code]
+  note: >-
+    The failed event carries a reason and a reason_code describing the collection
+    problem. Flywire does not publish an enumerated registry of reason_code values
+    anywhere in its documentation, so a consumer cannot map a code to a remediation
+    without asking Flywire — see the note in errors/flywire-problem-types.yml.
+  source: https://solutions.flywire.com/en/webhooks/notifications-v2
+related_surfaces:
+- ref: asyncapi/flywire-non-payment-webhooks.yml
+  note: Separate invoice.* / payment_request.* event catalog on solutions.flywire.com.

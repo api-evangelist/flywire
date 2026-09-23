@@ -1,12 +1,19 @@
-generated: '2026-07-19'
-method: searched
-source: https://www.flywire.com/.well-known/
+generated: '2026-09-02'
+method: probed
+source: live probes of every Flywire host named in apis.yml and in the docs
 notes: >-
-  Only the RFC 9116 security.txt is published. OIDC/OAuth authorization-server,
-  api-catalog and ai-plugin.json discovery documents are not served on the
-  website, developer portal, or the api-platform payment hosts (all 404). The
-  Flywire Payments API authorizes with a static API key header, not OAuth/OIDC,
-  so no authorization-server metadata is expected.
+  Re-probed 2026-09-02 across ALL EIGHT Flywire hosts, including the four found
+  this round on the Solutions documentation estate (api.flywire.com,
+  invoicing.flywire.com, app.flywire.com, app.demo.flywire.com) and the docs host
+  solutions.flywire.com. Result is unchanged and now much better evidenced: the
+  RFC 9116 security.txt on www.flywire.com is the ONLY well-known document Flywire
+  serves anywhere. There is no api-catalog, no ai-plugin.json, no agent card at
+  either the current or the legacy path, and — notably, given that the Invoicing
+  API is a real OAuth 2.0 client-credentials API with 16 documented scopes — no
+  authorization-server metadata and no protected-resource metadata on any host, so
+  those scopes and that token endpoint cannot be discovered by machine at all.
+  solutions.flywire.com answers 500 (not 404) for every unrouted path, which is
+  recorded as-is; it is a miss either way.
 hosts:
 - host: https://www.flywire.com
   documents:
@@ -17,9 +24,33 @@ hosts:
     status: 404
   - path: /.well-known/oauth-authorization-server
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
   - path: /.well-known/api-catalog
     status: 404
   - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://developers.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
     status: 404
 - host: https://api-platform.flywire.com
   documents:
@@ -29,13 +60,139 @@ hosts:
     status: 404
   - path: /.well-known/oauth-authorization-server
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
 - host: https://api-platform-sandbox.flywire.com
   documents:
   - path: /.well-known/security.txt
     status: 404
   - path: /.well-known/openid-configuration
     status: 404
-- host: https://developers.flywire.com
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://api.flywire.com
   documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
   - path: /.well-known/security.txt
     status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://invoicing.flywire.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://app.flywire.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://app.demo.flywire.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://solutions.flywire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 500
+    note: This host answers 500 for every unrouted path; treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 500
+    note: This host answers 500 for every unrouted path; treated as a miss.
+summary:
+  hosts_probed: 9
+  documents_served: 1
+  served:
+  - host: https://www.flywire.com
+    path: /.well-known/security.txt
+    file: flywire-security.txt
+  agent_card_found: false
+  oauth_metadata_found: false
+  api_catalog_found: false
+  checked: '2026-09-02'
+llms_txt:
+  url: https://www.flywire.com/llms.txt
+  status: 200
+  content_type: text/plain
+  last_modified: 'Wed, 15 Jul 2026 15:58:01 GMT'
+  saved_as: llms/flywire-llms.txt
+  method: searched
+  checked: '2026-09-02'
+  probed_hosts:
+  - {host: www.flywire.com, status: 200}
+  - {host: developers.flywire.com, status: 404}
+  - {host: solutions.flywire.com, status: 500}
+  - {host: api-platform.flywire.com, status: 404}
+  - {host: api.flywire.com, status: 404}
+  - {host: invoicing.flywire.com, status: 404}
+  - {host: app.flywire.com, status: 404}
+  link_audit:
+    links_checked: 17
+    live: 14
+    bot_challenged: 2
+    dead: 1
+    dead_links:
+    - url: https://www.flywire.com/company/newsroom
+      status: 404
+      note: Flywire's own llms.txt advertises this as "Newsroom"; the page is not served. The live equivalent is https://www.flywire.com/company/news.
+    bot_challenged_links:
+    - {url: https://www.flywire.com/support, status: 403, note: Cloudflare interstitial, page exists}
+    - {url: https://help.flywire.com/, status: 403, note: Cloudflare interstitial, page exists}
+  developer_surface_gap: >-
+    Flywire's published llms.txt is a MARKETING index. It names the platform,
+    industry, payer and investor pages and nothing else — it does not mention
+    developers.flywire.com, solutions.flywire.com, the Payments API, the Invoicing
+    API, the Payment Request API, the sandbox or the status page. An agent given
+    only this file would conclude Flywire has no API. The catalog-generated
+    API-oriented index is kept alongside it at llms/flywire-llms-catalog.txt.

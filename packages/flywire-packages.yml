@@ -1,13 +1,46 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
-source: https://www.npmjs.com/search?q=%40flywire
+source: https://registry.npmjs.org/
+registries_checked:
+- registry: npm
+  result: 7 first-party packages found (scope @flywire plus three unscoped)
+- registry: PyPI
+  result: no first-party package (pypi.org/pypi/flywire/json -> 404)
+- registry: RubyGems
+  result: no first-party gem (rubygems.org/api/v1/gems/flywire.json -> 404)
+- registry: NuGet
+  result: no first-party package (api.nuget.org registration -> 404)
+- registry: Maven Central
+  result: no first-party artifact
+- registry: pkg.go.dev
+  result: no first-party module
+- registry: Packagist
+  result: no first-party package
+- registry: crates.io
+  result: no first-party crate
 notes: >-
-  Flywire publishes first-party client-side JavaScript/React libraries under the
-  @flywire npm scope (source repos live in the github.com/peertransfer org,
-  Flywire's original company name). These are browser/front-end libraries for
-  embedding Flywire Elements/Checkout, not server-side SDKs. No first-party
-  Python, Java, Go, Ruby, PHP, .NET or Rust package was found on PyPI, Maven
-  Central, pkg.go.dev, RubyGems, Packagist, NuGet or crates.io.
+  Flywire ships NO server-side SDK in any language. Every first-party package it
+  publishes is a browser/front-end or internal-tooling library; there is no
+  Python, Java, Go, Ruby, PHP, .NET or Rust client for the Payments, Invoicing or
+  Payment Request APIs. THE CURRENCY SIGNAL IS THE STORY HERE. Flywire's developer
+  documentation was stamped "last updated on August 19, 2026" and its Invoicing
+  API contract changed materially on the same date, but the newest release of any
+  first-party npm package is @flywire/react-hooks (2024-11-25), and the two
+  packages that actually wrap the payment surface — @flywire/flywire-js and
+  @flywire/flywire-fetch — were last published on 2020-07-01 and 2020-06-30, more
+  than six years before the API they front. TWO SEPARATE DEFECTS were confirmed on
+  2026-09-02, both of which break a developer following the published metadata.
+  (1) Every one of these packages declares a repository under
+  github.com/peertransfer, and github.com/peertransfer is no longer Flywire: the
+  handle was re-registered on 2026-05-14 by an unrelated account and holds ZERO
+  public repositories. Flywire's real GitHub organization is
+  github.com/flywirecorp (created 2010-11-17, 69 public repos, homepage
+  flywire.com), which is where github.com/peertransfer/flystyles now redirects.
+  (2) Three of the four declared repos — flywire-js, react-flywire-js and
+  flywire-fetch — return 404 under BOTH handles: the source for Flywire's own
+  payment libraries is not published anywhere on GitHub any more. The npm tarballs
+  remain installable; their source does not.
+official_sdk_count: 3
 packages:
 - language: javascript
   registry: npm
@@ -15,9 +48,13 @@ packages:
   url: https://www.npmjs.com/package/@flywire/flywire-js
   install: npm install @flywire/flywire-js
   version: 0.0.6
+  published: '2020-07-01'
   license: MIT
   repository: https://github.com/peertransfer/flywire-js
+  repository_status: dead
+  repository_note: 404 under both peertransfer and flywirecorp (checked 2026-09-02).
   description: Flywire JavaScript client
+  role: api-client
   official: true
 - language: javascript
   registry: npm
@@ -25,9 +62,13 @@ packages:
   url: https://www.npmjs.com/package/@flywire/react-flywire-js
   install: npm install @flywire/react-flywire-js
   version: 1.0.5
+  published: '2023-03-27'
   license: MIT
   repository: https://github.com/peertransfer/react-flywire-js
+  repository_status: dead
+  repository_note: 404 under both peertransfer and flywirecorp (checked 2026-09-02).
   description: React components for Flywire
+  role: ui-binding
   official: true
 - language: javascript
   registry: npm
@@ -35,14 +76,107 @@ packages:
   url: https://www.npmjs.com/package/@flywire/flywire-fetch
   install: npm install @flywire/flywire-fetch
   version: 0.0.2
+  published: '2020-06-30'
   license: MIT
   repository: https://github.com/peertransfer/flywire-fetch
+  repository_status: dead
+  repository_note: 404 under both peertransfer and flywirecorp (checked 2026-09-02).
   description: Flywire's fetch wrapper
+  role: http-helper
+  official: true
+- language: javascript
+  registry: npm
+  name: "@flywire/react-hooks"
+  url: https://www.npmjs.com/package/@flywire/react-hooks
+  install: npm install @flywire/react-hooks
+  version: 4.0.0
+  published: '2024-11-25'
+  license: null
+  repository: https://github.com/flywirecorp/react-hooks
+  repository_status: archived
+  repository_note: Archived; last push 2022-04-03.
+  description: A collection of React hooks used in Flywire
+  role: internal-tooling
+  official: true
+- language: javascript
+  registry: npm
+  name: flycomponents
+  url: https://www.npmjs.com/package/flycomponents
+  install: npm install flycomponents
+  version: 6.0.0
+  published: '2023-01-25'
+  license: ISC
+  repository: https://github.com/flywirecorp/flycomponents
+  repository_status: archived
+  repository_note: Archived; last push 2022-04-01.
+  description: Flywire React components
+  role: ui-library
   official: true
 - language: javascript
   registry: npm
   name: flystyles
   url: https://www.npmjs.com/package/flystyles
   install: npm install flystyles
+  version: 2.23.3
+  published: '2022-07-07'
+  license: ISC
+  repository: https://github.com/flywirecorp/flystyles
+  repository_status: archived
+  repository_note: Archived 2023-10-03; github.com/peertransfer/flystyles redirects here.
   description: Flywire UI Framework
+  role: design-system
   official: true
+- language: javascript
+  registry: npm
+  name: "@flywire/prettier-config"
+  url: https://www.npmjs.com/package/@flywire/prettier-config
+  install: npm install @flywire/prettier-config
+  version: 1.3.0
+  published: '2022-06-07'
+  license: null
+  repository: https://github.com/flywirecorp/prettier-config
+  repository_status: archived
+  repository_note: Archived; last push 2021-10-04.
+  description: Flywire's base prettier configuration
+  role: internal-tooling
+  official: true
+- language: javascript
+  registry: cdn
+  name: flywire-payment.js
+  url: https://checkout.flywire.com/flywire-payment.js
+  install: '<script src="https://checkout.flywire.com/flywire-payment.js"></script>'
+  version: null
+  published: null
+  version_note: >-
+    UNPINNED. The Checkout loader is distributed only from Flywire's own CDN at a
+    version-less path, with Cache-Control no-store and no npm/jsDelivr/unpkg
+    mirror, so there is no registry metadata endpoint to query and no version in
+    the URL. The only currency signal available to anyone — Flywire's integrators
+    included — is the Last-Modified header, which read
+    "Tue, 01 Sep 2026 12:50:21 GMT" when probed on 2026-09-02. A consumer cannot
+    pin it, cannot diff it and cannot tell what they are getting.
+  license: proprietary
+  repository: null
+  description: >-
+    Flywire Checkout loader. Exposes window.FlywirePayment with
+    initiate(config) returning a modal handle (.render(), .close()).
+  role: hosted-checkout-loader
+  docs: https://solutions.flywire.com/en/checkout/implementation
+  official: true
+github_organization:
+  correct: https://github.com/flywirecorp
+  correct_evidence: >-
+    github.com/peertransfer/flystyles redirects to github.com/flywirecorp/flystyles;
+    the flywirecorp org was created 2010-11-17, lists flywire.com as its homepage
+    and holds 69 public repositories.
+  stale: https://github.com/peertransfer
+  stale_evidence: >-
+    The peertransfer org (Flywire's original company name) was re-registered
+    2026-05-14 and holds 0 public repositories. Every @flywire npm package still
+    points its repository field at it.
+  checked: '2026-09-02'
+  specs_in_org:
+    openapi: 0
+    protobuf: 0
+    wsdl: 0
+    note: GitHub code search across org:flywirecorp returned zero matches for openapi.yaml, .proto, .wsdl or swagger.

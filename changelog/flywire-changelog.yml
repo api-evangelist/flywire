@@ -1,0 +1,126 @@
+generated: '2026-09-02'
+method: searched
+source: https://solutions.flywire.com/en/revisions/change-log
+docs: https://solutions.flywire.com/en/revisions/change-log
+notes: >-
+  Flywire keeps one dated change log, and it lives on the Solutions documentation
+  site (solutions.flywire.com) — NOT on developers.flywire.com, which carries only
+  a "This documentation was last updated on <date>" footer with no history. The log
+  covers the Checkout, Payment Request, Dynamic Link, Invoicing and webhook
+  surfaces. Entries are dated ISO-8601 and titled; they are NOT tied to an API
+  version number, and the API itself is versioned only by URI path (v1). The log
+  documents documentation changes and behaviour changes together, so a reader
+  cannot always tell a doc correction from a contract change — the 2026-08-19
+  entry, for example, is framed as "corrections" but changes the documented error
+  bodies, statuses and OAuth scoping rules of the Invoicing API.
+scheme: dated-entries
+versioned: false
+api_version_scheme: uri-path
+current_api_version: v1
+entry_count_published: 13
+latest_entry: '2026-08-19'
+gap_note: >-
+  There is a 23-month gap between the 2024-08-15 entry and the 2026-08-19 entry.
+  The developers.flywire.com Payments API documentation was independently stamped
+  "last updated on August 19, 2026", so the two doc estates moved on the same day.
+entries:
+- date: '2026-08-19'
+  title: Invoicing API Corrections
+  breaking: false
+  additions:
+  - Documented the OAuth scopes and the company-scoping rule that govern every request
+  - Documented sendEmailNotification on invoice create and the notification e-mail on credit note create
+  - Documented Range semantics, page-size caps and sort syntax
+  highlights:
+  - Corrected the Invoicing API error responses — documented the real body shapes, the 403 status and the bodyless responses
+  - Documented that searches and counts return 404 when nothing matches
+  - Corrected the manual payment methods (BANK_TRANSFER, not BANK), the payment statuses and the payment search fields
+  - Corrected credit note allocation semantics — a request REPLACES a credit note's allocations rather than adding to them
+  - Corrected invoice update semantics, required and read-only body fields, late fee enums and service interval date format
+- date: '2024-08-15'
+  title: Added New Functionalities
+  breaking: false
+  additions:
+  - New Web Checkout Pre-Authorization function
+  - Invoicing API updated to include details on Groups
+- date: '2024-05-08'
+  title: Added New Quick Pay, Fixed Typing Errors & Include Japanese Translation for New Sections
+  breaking: false
+  deprecations:
+  - Deprecated Dynamic Links
+  additions:
+  - Added new Payment Request Template Links
+  - Added documentation sections for different products
+  - Updated Japanese translation
+- date: '2024-01-04'
+  title: Added New Payment Request API Functions, Update of New Testing Parameters & Webhook Payload
+  breaking: false
+  additions:
+  - New API functions for Payment Request — retrieve and update an existing payment request
+  - Updated test card information
+  - New test payment status transition SANDBOX_TO_CANCEL_STATUS
+  - Added payer information to the payload of Webhook Notifications V2
+- date: '2023-07-19'
+  title: Subscription Payments Plus Additional Checkout Parameters
+  breaking: false
+  deprecations:
+  - Deprecated all scheduled payment webhook notifications
+  additions:
+  - Subscriptions documentation for recurring payments and Payment Request Links
+  - Checkout parameters showLiveChat, payerEmailNotifications and embedTo
+  - Payment Request webhook examples for installment_paid, installment_failed, cancelled_by_payer, payment_method_by_payer
+  - Example bank details for BACS and SEPA Direct Debit mandates in the Testing section
+  - Added event_resource to payment webhook notifications
+  highlights:
+  - Changed brand in payment webhook notifications from an array of values to a free-text string
+- date: '2022-11-25'
+  title: Adding Direct Debits
+  breaking: false
+  additions:
+  - Direct Debit documentation for recurring payments
+  - Updated Japanese translations for Payment Request Links
+- date: '2022-11-10'
+  title: Adding Payment Request Links Plus Additional Dynamic Link Parameters
+  breaking: false
+  additions:
+  - Payment Request Links documentation
+  - Dynamic Link parameters readOnly, returnUrl, payoutCode and payoutAmount
+  - Restructured the documentation menu
+- date: '2022-04-06'
+  title: Payment Flow Changes Japanese Translation
+  breaking: true
+  highlights:
+  - Payments no longer trigger an initiated callback when held — they now go to cancelled or delivered as appropriate. This changes the event stream a consumer receives for held payments.
+  additions:
+  - Japanese translation of the docs (excluding the Invoicing API)
+- date: '2022-03-16'
+  title: Include Seed Payment Plus Tokenization Flow
+  breaking: false
+  additions:
+  - callbackVersion in the tokenization card capture step
+  - Amounts and currencies in the tokenization charge endpoint response
+- date: '2022-01-13'
+  title: Include Seed Payment Plus Tokenization Flow
+  breaking: false
+  additions:
+  - Seed Payment Tokenization details in the Repeat Payments section
+  highlights:
+  - Fixed an incorrect AMEX test card CVV code
+- date: '2021-12-21'
+  title: Update Notifications v2
+  breaking: false
+  highlights:
+  - event_date updated to use the same format as other dates in the message body
+- date: '2021-12-09'
+  title: Update Payer Info Params
+  breaking: false
+  additions:
+  - zip and state parameters in the payerInfo parameter for checkout implementation
+  - zip and state parameters in the Link Generator
+  highlights:
+  - Fixed an incorrectly labelled sample v1 cancelled notification
+- date: '2021-11-26'
+  title: Added Invoicing API
+  breaking: false
+  additions:
+  - Added the Invoicing API section

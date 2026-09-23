@@ -1,49 +1,277 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: derived
 status: candidate
-source: https://developers.flywire.com/education/Content/resource_payments.htm
-notes: No official Flywire MCP server was found (checked docs, the @modelcontextprotocol npm scope, and
-  MCP registries). This is a CANDIDATE tool surface derived from the documented Payments API operations
-  to seed a future MCP server. Flywire publishes no OpenAPI, so source_operation references point at the
-  docs.
+source: https://developers.flywire.com/education/Content/api-reference.htm
+notes: >-
+  NO OFFICIAL FLYWIRE MCP SERVER EXISTS. Searched 2026-09-02: the Model Context
+  Protocol registry (registry.modelcontextprotocol.io) returns zero servers for
+  "flywire"; npm has no @flywire MCP package; neither developers.flywire.com nor
+  solutions.flywire.com mentions MCP anywhere. The one apparent hit is a false
+  positive worth recording so a later round does not chase it — a POST of
+  tools/list to https://mcp.flywire.com/mcp returns 301 to
+  https://www.flywire.com/pay/mcp/mcp, which is a wildcard-subdomain rewrite that
+  ends in 404, not an MCP endpoint. This file is therefore a CANDIDATE tool
+  surface derived from Flywire's own documented HTTP operations across all three
+  of its public APIs, to seed a future server. Flywire publishes no OpenAPI, so
+  every source_operation below points at the documentation page that states it,
+  and no inputSchema is asserted — the parameters would have to come from an
+  OpenAPI Flywire does not ship.
 server:
-  name: flywire-payments
-  transport: http
+  name: flywire
+  transport: null
   url: null
-auth:
-  type: apiKey
-  header: X-Authentication-Key
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  checked: '2026-09-02'
+  evidence:
+  - url: https://registry.modelcontextprotocol.io/v0/servers?search=flywire
+    status: 200
+    result: '{"servers":[],"metadata":{"count":0}}'
+  - url: https://mcp.flywire.com/mcp
+    status: 301
+    result: Redirects to https://www.flywire.com/pay/mcp/mcp, which returns 404. Wildcard subdomain rewrite, not an MCP endpoint.
+  - url: https://api-platform.flywire.com/mcp
+    status: 404
+auth_if_built:
+  payments_api:
+    type: apiKey
+    header: X-Authentication-Key
+  invoicing_api:
+    type: oauth2
+    flow: client_credentials
+    token_endpoint: https://api.flywire.com/oauth/token
+    scopes_ref: scopes/flywire-scopes.yml
+  payment_request_api:
+    type: hmac
+    header: X-Flywire-Digest
+surfaces:
+- api: Flywire Payments API
+  base: https://api-platform.flywire.com/payments/v1/
+  docs: https://developers.flywire.com/education/Content/api-reference.htm
+  documented_operations: 40
+- api: Flywire Invoicing API
+  base: https://invoicing.flywire.com
+  docs: https://solutions.flywire.com/en/invoicing/invoicing-api
+  documented_operations: 25
+- api: Flywire Payment Request API
+  base: https://app.flywire.com/rest/payment-request/public/company/:public_reference
+  docs: https://solutions.flywire.com/en/payment-requests/payment-request-api
+  documented_operations: 4
+tool_count: 44
 tools:
+- name: list_recipients
+  api: payments
+  description: List the recipients (portals) your credentials can collect into.
+  source_operation: GET /payments/v1/recipients
+- name: get_recipient
+  api: payments
+  description: Get one recipient by recipient ID (portal code).
+  source_operation: GET /payments/v1/recipients/{recipientId}
+- name: create_checkout_session
+  api: payments
+  description: Create a checkout session for a one-off, recurring or pre-authorization flow.
+  source_operation: POST /payments/v1/checkout/sessions
+- name: confirm_checkout_session
+  api: payments
+  description: Confirm a checkout session and produce a payment.
+  source_operation: POST /payments/v1/checkout/sessions/{sessionID}/confirm
+- name: expire_checkout_session
+  api: payments
+  description: Expire an unconfirmed checkout session.
+  source_operation: POST /payments/v1/checkout/sessions/{sessionID}/expire
+  reversal_of: create_checkout_session
 - name: create_payment
+  api: payments
   description: Create a payment (charge).
   source_operation: POST /payments/v1/payments/charge
-- name: list_payments
-  description: List payments with page/per_page pagination.
-  source_operation: GET /payments/v1/payments
-- name: get_payment
-  description: Get the details of a payment by id.
-  source_operation: GET /payments/v1/payments/{paymentID}
-- name: get_payment_receipt
-  description: Get the receipt for a payment.
-  source_operation: GET /payments/v1/payments/{paymentID}/receipt
 - name: capture_payment
-  description: Capture a pre-authorization.
+  api: payments
+  description: Capture funds held by a pre-authorization.
   source_operation: POST /payments/v1/payments/{paymentID}/captures
 - name: adjust_authorization
-  description: Adjust a pre-authorization amount.
+  api: payments
+  description: Adjust or extend a pre-authorization amount or holding period.
   source_operation: POST /payments/v1/payments/{paymentID}/authorization_adjustments
 - name: process_payment
+  api: payments
   description: Mark a payment as processed.
   source_operation: POST /payments/v1/payments/{paymentID}/process
 - name: cancel_payment
-  description: Cancel a payment.
+  api: payments
+  description: Cancel a payment; on a pre-authorization this releases the hold immediately.
   source_operation: POST /payments/v1/payments/{paymentID}/cancel
+  reversal_of: create_payment
+- name: list_payments
+  api: payments
+  description: List payments, filterable by recipients and status, with page/per_page pagination.
+  source_operation: GET /payments/v1/payments
+- name: get_payment
+  api: payments
+  description: Get the details of a payment by payment reference.
+  source_operation: GET /payments/v1/payments/{paymentID}
+- name: get_payment_receipt
+  api: payments
+  description: Download the PDF receipt for a payment (available from status Guaranteed).
+  source_operation: GET /payments/v1/payments/{paymentID}/receipt
 - name: create_refund
-  description: Create a refund against a payment.
+  api: payments
+  description: Create a full or partial refund against a Delivered payment.
   source_operation: POST /payments/v1/payments/{paymentID}/refunds
-deployment:
-  mode: none
-  verified: derived
-  tools: 9
-  checked: '2026-08-12'
-  source: catalog MCP census
+- name: list_refunds
+  api: payments
+  description: List refunds, filterable by payment_id and status.
+  source_operation: GET /payments/v1/refunds
+- name: get_refund
+  api: payments
+  description: Get the details of a refund.
+  source_operation: GET /payments/v1/refunds/{refundID}
+- name: cancel_refund
+  api: payments
+  description: Cancel a refund before its bundle is processed.
+  source_operation: POST /payments/v1/refunds/{refundID}/cancel
+  reversal_of: create_refund
+- name: list_refund_bundles
+  api: payments
+  description: List refund bundles.
+  source_operation: GET /payments/v1/refund_bundles
+- name: get_refund_bundle
+  api: payments
+  description: Get one refund bundle and the refunds it contains.
+  source_operation: GET /payments/v1/refund_bundles/{bundleID}
+- name: approve_refund_bundle
+  api: payments
+  description: Approve a refund bundle so Flywire can process it.
+  source_operation: POST /payments/v1/refund_bundles/{bundleID}/approve
+- name: list_payor_payment_methods
+  api: payments
+  description: List a payor's stored payment methods.
+  source_operation: GET /payments/v1/payors/{payorId}/payment_methods
+- name: get_payor_payment_method
+  api: payments
+  description: Get one stored payment method by token.
+  source_operation: GET /payments/v1/payors/{payorId}/payment_methods/{token}
+- name: delete_payor_payment_method
+  api: payments
+  description: Delete a stored payment method token.
+  source_operation: DELETE /payments/v1/payors/{payorId}/payment_methods/{token}
+- name: list_recurring_plans
+  api: payments
+  description: List recurring payment plans.
+  source_operation: GET /payments/v1/recurring_plans
+- name: get_recurring_plan
+  api: payments
+  description: Get one recurring plan.
+  source_operation: GET /payments/v1/recurring_plans/{planID}
+- name: cancel_recurring_plan
+  api: payments
+  description: Cancel a recurring plan.
+  source_operation: POST /payments/v1/recurring_plans/{planID}/cancel
+- name: list_offers
+  api: payments
+  description: List 529 payment offers for an amount, country and recipient.
+  source_operation: GET /payments/v1/offers
+- name: create_order
+  api: payments
+  description: Create a 529 payment order.
+  source_operation: POST /payments/v1/orders
+- name: update_order
+  api: payments
+  description: Partially update a 529 order.
+  source_operation: PATCH /payments/v1/orders/{orderId}
+- name: charge_order
+  api: payments
+  description: Charge a 529 order.
+  source_operation: POST /payments/v1/orders/{orderId}/charge
+- name: list_payment_documents
+  api: payments
+  description: List the documents required or attached for a payment.
+  source_operation: GET /payments/v1/payments/{paymentID}/documents
+- name: upload_document_file
+  api: payments
+  description: Upload a file against a payment document.
+  source_operation: POST /payments/v1/payments/{paymentID}/documents/{documentID}/files
+- name: get_document_file
+  api: payments
+  description: Download a document file.
+  source_operation: GET /payments/v1/payments/{paymentID}/documents/{documentID}/files/{fileID}
+- name: delete_document_file
+  api: payments
+  description: Delete a document file.
+  source_operation: DELETE /payments/v1/payments/{paymentID}/documents/{documentID}/files/{fileID}
+  reversal_of: upload_document_file
+- name: list_disbursements
+  api: payments
+  description: List disbursements (daily batch payouts to the recipient).
+  source_operation: GET /payments/v1/disbursements
+- name: get_disbursement
+  api: payments
+  description: Get one disbursement.
+  source_operation: GET /payments/v1/disbursements/{disbursementId}
+- name: get_disbursement_files
+  api: payments
+  description: Get the reconciliation files for a disbursement.
+  source_operation: GET /payments/v1/disbursements/{disbursementId}/files
+- name: get_disbursement_refunds
+  api: payments
+  description: Get the refunds included in a disbursement.
+  source_operation: GET /payments/v1/disbursements/{disbursementId}/refunds
+- name: get_disbursement_payouts
+  api: payments
+  description: Get the payouts in a disbursement.
+  source_operation: GET /payments/v1/disbursements/{disbursementId}/payouts
+- name: get_disbursement_adjustments
+  api: payments
+  description: Get the adjustments applied to a disbursement.
+  source_operation: GET /payments/v1/disbursements/{disbursementId}/adjustments
+- name: create_payment_request
+  api: payment_request
+  description: Create a payment request for a company, optionally with instalments.
+  source_operation: 'POST /rest/payment-request/public/company/:public_reference'
+- name: get_payment_request
+  api: payment_request
+  description: Retrieve an existing payment request.
+  source_operation: 'GET /rest/payment-request/public/company/:public_reference/id/:payment_request_id'
+- name: update_payment_request_installments
+  api: payment_request
+  description: Add, modify or delete the instalments on a payment request.
+  source_operation: 'PATCH /rest/payment-request/public/company/:public_reference/id/:payment_request_id'
+- name: delete_payment_request
+  api: payment_request
+  description: Remove an entire payment request.
+  source_operation: 'DELETE /rest/payment-request/public/company/:public_reference/id/:payment_request_id'
+  reversal_of: create_payment_request
+invoicing_tool_groups:
+  note: >-
+    The Invoicing API's 25 documented operations are grouped rather than listed
+    one-by-one here because every one of them is scope-gated AND company-gated,
+    so a tool built on it must carry the scope in its own contract. See
+    scopes/flywire-scopes.yml for the scope each group requires.
+  groups:
+  - group: contacts
+    operations: 7
+    scopes: [invoicing.contact.read, invoicing.contact.write]
+    paths: ['POST/GET/PUT/PATCH/DELETE /company/:reference/contact[/:id|/:ids]', 'HEAD /company/:reference/contact']
+  - group: invoices
+    operations: 9
+    scopes: [invoicing.invoice.read, invoicing.invoice.write, invoicing.payments.write]
+    paths: ['POST/GET/PUT/PATCH/DELETE /company/:reference/invoice[/:id|/:ids]', 'GET /company/:reference/invoice/counts', 'GET /invoice/public/:publicId', 'POST /company/:reference/invoice/:id/payment/payex']
+  - group: credit_notes
+    operations: 7
+    scopes: [invoicing.creditnote.read, invoicing.creditnote.write]
+    paths: ['POST/GET/PUT/PATCH /company/:reference/creditnote[/:id|/:ids]', 'GET /creditnote/public/:publicId', 'POST /company/:reference/creditnote/:id/allocate']
+  - group: company
+    operations: 1
+    scopes: [invoicing.company.read]
+    paths: ['GET /company/:reference/settings/payNowCodes']
+crosswalk:
+  emitted: false
+  reason: >-
+    A ToolCrosswalk binds MCP tools to backing OpenAPI operationIds. Flywire
+    publishes no OpenAPI and no GraphQL surface, and ships no MCP server, so there
+    is nothing on either side of the crosswalk to bind. Not emitted rather than
+    fabricated.

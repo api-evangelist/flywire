@@ -1,0 +1,83 @@
+generated: '2026-09-02'
+method: searched
+source: https://solutions.flywire.com/en/webhooks/non-payment-webhooks
+spec_type: Webhooks
+notes: >-
+  Flywire's SECOND webhook surface, documented on solutions.flywire.com and
+  entirely separate from the payment-status callbacks in
+  asyncapi/flywire-payments-webhooks.yml. These events fire on invoice and payment
+  request lifecycle, not on payment status, and they are subscribed per company
+  (the invoicing.company.update OAuth scope grants "company settings and webhook
+  subscriptions"). No machine-readable AsyncAPI document is published for either
+  surface — this is a captured event catalog, not a harvested spec. The
+  non-payment webhook documentation does NOT restate a signature header; the
+  payment-notification surface signs with X-Flywire-Digest and the same shared
+  secret is the only signing mechanism Flywire documents anywhere, but a consumer
+  should confirm signing behaviour with Flywire before relying on it for these
+  events.
+delivery:
+  transport: https-webhook
+  method: POST
+  content_type: application/json
+  signature:
+    header: X-Flywire-Digest
+    documented_on_this_page: false
+    note: >-
+      Not restated in the non-payment webhook reference; see
+      https://solutions.flywire.com/en/webhooks/notifications-v2 for the digest
+      scheme Flywire documents for callbacks.
+  subscription: >-
+    Webhook subscriptions are company settings, changed with the
+    invoicing.company.update OAuth scope.
+event_count: 13
+events:
+- type: invoice.viewed
+  resource: invoice
+  description: Triggered when the invoice is viewed for the first time.
+- type: invoice.overdue
+  resource: invoice
+  description: Triggered when an invoice becomes overdue.
+- type: invoice.payment_guaranteed
+  resource: invoice
+  description: Triggered when any payment for an invoice moves to the guaranteed status.
+- type: invoice.fully_paid
+  resource: invoice
+  description: Triggered when an invoice balance reaches zero and is fully paid.
+- type: payment_request.viewed
+  resource: payment_request
+  description: Triggered when the payment request is viewed for the first time.
+- type: payment_request.payment_guaranteed
+  resource: payment_request
+  description: Triggered when any payment for a payment request moves to the guaranteed status.
+- type: payment_request.fully_paid
+  resource: payment_request
+  description: Triggered when a payment request balance reaches zero and is fully paid.
+- type: payment_request.installment_paid
+  resource: payment_request
+  description: Triggered when a payment request instalment is paid.
+- type: payment_request.installment_failed
+  resource: payment_request
+  description: Triggered when a payment request instalment payment fails.
+- type: payment_request.cancelled_by_payer
+  resource: payment_request
+  description: Triggered when a payment request is cancelled by the payer (subscriptions).
+- type: payment_request.payment_method_by_payer
+  resource: payment_request
+  description: Triggered when a payer changes the payment method on a payment request with auto-pay enabled.
+- type: scheduled_payment.installment_paid
+  resource: scheduled_payment
+  description: Triggered when a scheduled payment instalment is successfully processed.
+  deprecated: true
+  deprecation_source: 'Change Log 2023-07-19: "Deprecated all scheduled payment webhook notifications"'
+- type: scheduled_payment.installment_failed
+  resource: scheduled_payment
+  description: Triggered when a payment made against a schedule fails.
+  deprecated: true
+  deprecation_source: 'Change Log 2023-07-19: "Deprecated all scheduled payment webhook notifications"'
+asyncapi_spec:
+  published: false
+  note: >-
+    Flywire publishes no AsyncAPI document. Probed 2026-09-02: /asyncapi.yaml and
+    /asyncapi.json return 404 on developers.flywire.com, api-platform.flywire.com
+    and invoicing.flywire.com, and 500 on solutions.flywire.com (that host answers
+    500 for every unrouted path). None served. Never fabricated here.

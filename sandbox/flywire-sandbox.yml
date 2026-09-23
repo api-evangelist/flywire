@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/sandbox_one-off-payments-elements.htm
 environments:
@@ -121,3 +121,55 @@ magic_values:
 threeds:
   password: password
   note: For scenarios that trigger 3DS, enter "password" in the password field to complete authentication.
+
+magic_values:
+  mechanism: cardholder-name
+  note: >-
+    Outcome in the sandbox is driven by the CARDHOLDER'S NAME, not by the card
+    number. Flywire is explicit that payer-name magic values are a different set
+    used for bank-transfer testing and must NOT be used in card tests. All values
+    verbatim from the provider.
+  source: https://developers.flywire.com/education/Content/testing-card-payments.htm
+  scenarios:
+  - first_name: MAGICVALUE
+    last_name: APPROVED
+    flow: Initiated > Processed > Guaranteed
+    callbacks: [initiated, processed, guaranteed]
+    outcome: success
+  - first_name: MAGICVALUE
+    last_name: CARD EXPIRED
+    flow: Initiated > Failed
+    callbacks: [initiated, failed]
+    outcome: decline
+  - first_name: MAGICVALUE
+    last_name: NOT ENOUGH BALANCE
+    flow: Initiated > Failed
+    callbacks: [initiated, failed]
+    outcome: decline
+  - first_name: MAGICVALUE
+    last_name: FRAUD
+    flow: Initiated > Failed
+    callbacks: [initiated, failed]
+    outcome: decline
+status_transition_triggers:
+- name: SANDBOX_TO_CANCEL_STATUS
+  description: Test payment status transition added 2024-01-04 to force a payment to cancelled.
+  source: https://solutions.flywire.com/en/revisions/change-log
+solutions_estate:
+  note: >-
+    The Invoicing and Payment Request APIs use a separate demo environment from the
+    Payments API sandbox, on a different hostname, with its own testing pages.
+  demo_host: https://app.demo.flywire.com
+  production_host: https://app.flywire.com
+  test_docs:
+  - https://solutions.flywire.com/en/testing/card-details
+  - https://solutions.flywire.com/en/testing/status-transitions
+  mandate_test_data: Example bank details for BACS and SEPA Direct Debit mandates are published in the Testing section (added 2023-07-19).
+test_clocks:
+  supported: false
+  note: No time simulation / test clock facility is documented.
+fixture_tooling:
+  supported: false
+  note: >-
+    No fixture generator, seeding CLI or trigger API. Scenarios are driven only by
+    the magic cardholder names and the documented status-transition triggers.

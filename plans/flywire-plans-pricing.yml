@@ -1,0 +1,36 @@
+generated: '2026-09-02'
+method: searched
+source: https://www.flywire.com/
+notes: >-
+  Flywire publishes NO public pricing for its payment platform or for API access.
+  There is no /pricing page (https://www.flywire.com/pricing returns 404), no
+  published rate card, no self-serve tier, and no plan selector anywhere on
+  flywire.com, developers.flywire.com or solutions.flywire.com. Commercial terms
+  are negotiated per client: the developer docs state plainly that "Registering
+  an application is a manual process at the moment" and direct integrators to
+  contact Flywire to be registered and issued an API Key and Shared Secret, and
+  the refunds documentation repeatedly routes capability requests ("permission to
+  work with refunds", refund cut-off times, netting/direct-debit collection) to
+  the Flywire Solutions team. Payer-side FX margin and any fixed transaction fee
+  are disclosed to the payer inside the checkout flow, not in a published catalog.
+  This is an enterprise contact-sales model, recorded as plan_count 0 rather than
+  omitted.
+plan_count: 0
+model: contact-sales
+self_serve_signup: false
+free_tier: false
+public_rate_card: false
+plans: []
+evidence:
+- url: https://www.flywire.com/pricing
+  status: 404
+  note: No pricing page is served.
+- url: https://developers.flywire.com/education/Content/api-basics.htm
+  status: 200
+  note: >-
+    "Registering an application is a manual process at the moment. Please contact
+    [Flywire] to register and get the API Key for your application as well as a
+    Shared Secret for validating notifications."
+- url: https://www.flywire.com/platform/integrations/api
+  status: 200
+  note: Product page for the Payments API; carries a contact/demo call-to-action, no prices.

@@ -1,28 +1,96 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/api-basics.htm
+docs:
+- https://developers.flywire.com/education/Content/api-basics.htm
+- https://solutions.flywire.com/en/invoicing/invoicing-api
+- https://solutions.flywire.com/en/payment-requests/payment-request-api
 notes: >-
-  Flywire has no published OpenAPI (the api-platform openapi.json returns 401),
-  so this profile is captured from the developer docs rather than derived. The
-  Payments API authorizes with a single static API key sent in a request header;
-  there is no OAuth/OIDC flow and therefore no scopes artifact. Webhook callbacks
-  are separately authenticated by an HMAC-SHA256 signature computed with a shared
-  secret (see asyncapi/flywire-payments-webhooks.yml).
+  Flywire publishes no OpenAPI on any host, so this profile is SEARCHED from the
+  developer documentation rather than derived from securitySchemes. The headline
+  finding is that Flywire runs THREE DIFFERENT AUTHORIZATION MODELS across three
+  public APIs, documented on two unconnected documentation estates, with no shared
+  credential and no discovery document tying them together. An integrator who
+  reads developers.flywire.com learns only about the static API-key header and
+  would have no way to know that the Invoicing API speaks OAuth 2.0. Probed
+  2026-09-02: /.well-known/oauth-authorization-server, /.well-known/openid-configuration
+  and /.well-known/oauth-protected-resource return 404 on www.flywire.com,
+  api.flywire.com, invoicing.flywire.com, app.flywire.com, app.demo.flywire.com,
+  api-platform.flywire.com, api-platform-sandbox.flywire.com and
+  developers.flywire.com — every scheme below must be learned from prose.
 summary:
-  types: [apiKey]
+  types: [apiKey, oauth2, http-signature]
   api_key_in: [header]
-  oauth2_flows: []
+  oauth2_flows: [clientCredentials]
+  discovery_documents: []
+  models_count: 3
 schemes:
 - name: ApiKeyAuth
+  api: Flywire Payments API
+  host: api-platform.flywire.com
   type: apiKey
   in: header
   parameter_name: X-Authentication-Key
   description: >-
-    Per-application API key obtained by registering with Flywire (contact
-    Flywire support). Sent on every request as the X-Authentication-Key header.
-  registration: Contact Flywire to register an application and receive an API key + Shared Secret.
+    Per-application API key. Sent on every request as the X-Authentication-Key
+    header alongside Content-Type: application/json. There is no scope surface,
+    no expiry documented, and no rotation procedure published.
+  registration: >-
+    "Registering an application is a manual process at the moment." Contact
+    Flywire to register an application and receive an API Key plus a Shared
+    Secret for validating notifications.
+  scoped: false
   sources: [docs]
+  docs: https://developers.flywire.com/education/Content/api-basics.htm
+- name: OAuth2ClientCredentials
+  api: Flywire Invoicing API
+  host: invoicing.flywire.com
+  type: oauth2
+  flow: clientCredentials
+  token_endpoint: https://api.flywire.com/oauth/token
+  token_request: JSON body with grant_type=client_credentials, client_id, client_secret
+  token_response: access_token plus its time-to-live in seconds
+  in: header
+  parameter_name: Authorization
+  scheme: Bearer
+  description: >-
+    OAuth 2.0 Client Credentials. Authorization is enforced on two independent
+    axes and BOTH fail closed with a bodyless 403: the token must carry the scope
+    for the resource and operation, AND the token must be scoped to the company in
+    the :reference path segment. Permissions that belong to dashboard users rather
+    than to applications are never granted to an application token, so some
+    operations are unreachable through the API entirely.
+  scoped: true
+  scopes_ref: scopes/flywire-scopes.yml
+  scope_count: 16
+  sources: [docs]
+  docs: https://solutions.flywire.com/en/invoicing/invoicing-api
+- name: FlywireDigest
+  api: Flywire Payment Request API
+  host: app.flywire.com
+  type: http-signature
+  in: header
+  parameter_name: X-Flywire-Digest
+  algorithm: base64(HMAC-SHA256(request body, shared secret))
+  description: >-
+    Request-level HMAC digest rather than a bearer credential. The digest is
+    computed over the request body — or, for DELETE, over the payment request ID —
+    using a shared secret arranged with Flywire. This is the same header name and
+    algorithm Flywire uses to sign OUTBOUND webhook callbacks, used here in the
+    inbound direction.
+  scoped: false
+  sources: [docs]
+  docs: https://solutions.flywire.com/en/payment-requests/payment-request-api
 webhook_auth:
   header: X-Flywire-Digest
-  algorithm: HMAC-SHA256 (base64-encoded hash of the request body + Shared Secret)
-  secret: Shared Secret issued at application registration
+  algorithm: base64-encoded HMAC-SHA256 hash of the message body and a shared secret
+  secret: Shared Secret issued at application registration / arranged with your account manager
+  direction: inbound-to-your-endpoint
+  note: >-
+    Flywire signs callbacks with the same header and algorithm it accepts on the
+    Payment Request API. Verify the digest before trusting a callback body.
+  docs: https://solutions.flywire.com/en/webhooks/notifications-v2
+gaps:
+- No OAuth authorization-server metadata or OpenID configuration is served on any Flywire host (all probes 404, 2026-09-02).
+- No token expiry, rotation or revocation policy is published for the Payments API static key.
+- The three authorization models are documented on two separate doc sites that do not cross-link their auth sections.

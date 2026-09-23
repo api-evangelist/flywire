@@ -1,13 +1,27 @@
-generated: '2026-07-19'
+generated: '2026-09-02'
 method: searched
 source: https://developers.flywire.com/education/Content/api-basics.htm
 notes: >-
-  Cross-cutting request/response semantics for the Flywire Payments API, captured
-  from the developer docs. Idempotency is NOT documented by Flywire, so no
-  Idempotency pointer is emitted.
+  Cross-cutting request/response semantics for the Flywire APIs, captured from the
+  developer docs. Idempotency is NOT documented by Flywire on any of its three
+  APIs, so no Idempotency pointer is emitted — a retried POST /payments/charge or
+  POST /invoice has no documented deduplication key, which an agent must treat as
+  an at-most-once obligation on its own side. Updated 2026-09-02 with the
+  Invoicing and Payment Request APIs (solutions.flywire.com), a reversibility
+  profile, and the webhook retry schedule.
 authentication:
-  style: api-key-header
-  header: X-Authentication-Key
+  style: three-models-no-discovery
+  models:
+  - api: Flywire Payments API
+    style: api-key-header
+    header: X-Authentication-Key
+  - api: Flywire Invoicing API
+    style: oauth2-client-credentials
+    header: 'Authorization: Bearer'
+    scopes_ref: scopes/flywire-scopes.yml
+  - api: Flywire Payment Request API
+    style: hmac-request-digest
+    header: X-Flywire-Digest
   ref: authentication/flywire-authentication.yml
 content_type:
   request: application/json
@@ -35,13 +49,24 @@ pagination:
   - per_page
 idempotency:
   supported: false
-  note: Flywire does not document an idempotency key mechanism.
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    Flywire documents no idempotency key on any of its three APIs. There is no
+    Idempotency-Key header, no request-id deduplication window and no
+    "safe to retry" statement in the docs. The only related guard is a business
+    rule rather than a protocol one: a payment can have only ONE active refund at
+    a time, so a duplicate refund create is rejected while the first is in flight.
+    An agent retrying a create after a timeout can double-charge.
 rate_limiting:
   limit: 500 requests per minute
   scope: per IP address
   exceeded_status: 429
+  error_code: 1015
   penalty: Access blocked for 10 minutes after the limit is exceeded.
-  ref: null
+  response_headers_documented: false
+  ref: rate-limits/flywire-rate-limits.yml
 error_envelope:
   format: rfc7807
   media_type: application/problem+json
@@ -52,3 +77,149 @@ webhooks:
   supported: true
   signature_header: X-Flywire-Digest
   ref: asyncapi/flywire-payments-webhooks.yml
+
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id / correlation-id response header is documented on any Flywire
+    API. Callback correlation is done at the business level instead, with the
+    external_reference field the caller supplies on payment and refund creation
+    (max 50 characters), which is echoed back in the status notification.
+field_expansion:
+  supported: false
+  note: No expand / sparse-fieldset / include parameter is documented.
+metadata:
+  supported: partial
+  fields: [external_reference]
+  note: >-
+    external_reference is the only caller-controlled string carried through the
+    payment and refund lifecycle and echoed in notifications. Max 50 characters.
+dry_run_mode:
+  supported: false
+  status: na
+  note: >-
+    No preview / simulate / dry-run parameter is documented. The sandbox
+    (api-platform-sandbox.flywire.com plus magic-value cardholder names) is the
+    only rehearsal surface — see sandbox/flywire-sandbox.yml.
+reversibility:
+  grade: verified
+  summary: >-
+    Every write surface Flywire documents has a named reversal operation, and one
+    of them carries an explicitly stated window: a Pre-Authorization hold lasts 7
+    days from creation and the blocked funds return to the cardholder if it is not
+    captured. The refund path is reversible in the other direction too — a refund
+    can itself be cancelled while its bundle is still open. The windows that are
+    NOT stated as numbers are stated as states or as per-recipient configuration
+    (a payment must be Delivered before it can be refunded; a refund bundle can be
+    added to until that recipient's cut-off time), and those are recorded here as
+    they are written rather than converted into a duration Flywire never published.
+  surfaces:
+  - write_operation: POST /payments/v1/payments/{paymentID}/refunds
+    write_label: Create a refund for a payment
+    reversal: partial-or-full refund of the original payment
+    window: >-
+      No calendar window. The payment must have reached status Delivered; the sum
+      of all refunds cannot exceed the original payment amount; only one active
+      refund per payment at a time.
+    window_stated: true
+    window_kind: state-gated
+    docs: https://developers.flywire.com/education/Content/use-case_refunds.htm
+  - write_operation: POST /payments/v1/payments/{paymentID}/refunds
+    write_label: A created refund
+    reversal: POST /payments/v1/refunds/{refundID}/cancel
+    window: >-
+      Until the refund bundle it belongs to is processed. Each recipient has its
+      own cut-off time (configured with Flywire, with a timezone) after which the
+      bundle is approved and processed; refunds can be added to the bundle until
+      then.
+    window_stated: true
+    window_kind: per-recipient-configuration
+    docs: https://developers.flywire.com/education/Content/resource_refunds.htm
+  - write_operation: POST /payments/v1/payments/charge (pre-authorization)
+    write_label: Place a pre-authorization hold on a card
+    reversal: POST /payments/v1/payments/{paymentID}/cancel
+    window: >-
+      7 days. "Flywire can reserve the funds for 7 days. The period starts from
+      the day the Pre-Authorization Payment is created." The blocked amount
+      returns to the cardholder's credit immediately on cancel, or automatically
+      if the funds are not captured within the holding period. The period can be
+      extended.
+    window_stated: true
+    window_kind: duration
+    duration_days: 7
+    docs: https://developers.flywire.com/education/Content/use-case_pre-authorization-payments.htm
+  - write_operation: POST /payments/v1/checkout/sessions
+    write_label: Create a checkout session
+    reversal: POST /payments/v1/checkout/sessions/{sessionID}/expire
+    window: Until the session is confirmed.
+    window_stated: true
+    window_kind: state-gated
+    docs: https://developers.flywire.com/education/Content/resource_checkout-sessions.htm
+  - write_operation: POST /payments/v1/recurring_plans (via checkout)
+    write_label: Start a recurring plan
+    reversal: POST /payments/v1/recurring_plans/{planID}/cancel
+    window: Not stated.
+    window_stated: false
+    docs: https://developers.flywire.com/education/Content/resource_recurring-plans.htm
+  - write_operation: Store a payer payment method (tokenization)
+    write_label: Stored payment method
+    reversal: DELETE /payments/v1/payors/{payorId}/payment_methods/{token}
+    window: Not stated.
+    window_stated: false
+    docs: https://developers.flywire.com/education/Content/resource_payors.htm
+  - write_operation: POST /payments/v1/payments/{paymentID}/documents/{documentID}/files
+    write_label: Upload a document file
+    reversal: DELETE /payments/v1/payments/{paymentID}/documents/{documentID}/files/{fileID}
+    window: Not stated.
+    window_stated: false
+    docs: https://developers.flywire.com/education/Content/resource_documents.htm
+  - write_operation: POST /company/:reference/invoice (Invoicing API)
+    write_label: Create an invoice
+    reversal: DELETE /company/:reference/invoice/:ids
+    window: >-
+      Not a time window — a business one. "Cannot delete invoice with pending
+      payment" is returned as a 403 with a faults body, so deletion is blocked
+      once a payment is in flight against the invoice.
+    window_stated: true
+    window_kind: state-gated
+    docs: https://solutions.flywire.com/en/invoicing/invoicing-api
+  - write_operation: POST /company/:reference/creditnote/:id/allocate (Invoicing API)
+    write_label: Allocate a credit note
+    reversal: re-POST the allocation with the desired set
+    window: >-
+      No separate undo operation. An allocate request REPLACES a credit note's
+      allocations rather than adding to them (documented explicitly in the
+      2026-08-19 change log entry), so the reversal is a re-allocation, not a
+      delete. An agent that treats allocate as additive will silently drop
+      existing allocations.
+    window_stated: true
+    window_kind: replace-semantics
+    docs: https://solutions.flywire.com/en/revisions/change-log
+  - write_operation: POST / (Payment Request API)
+    write_label: Create a payment request
+    reversal: DELETE /id/:payment_request_id
+    window: Not stated.
+    window_stated: false
+    docs: https://solutions.flywire.com/en/payment-requests/payment-request-api
+  irreversible:
+  - operation: POST /payments/v1/payments/{paymentID}/process
+    note: >-
+      Marking a payment as processed moves it forward in the lifecycle. Flywire
+      documents no un-process operation; the only route back is a refund once the
+      payment reaches Delivered.
+  - operation: POST /payments/v1/payments/{paymentID}/captures
+    note: >-
+      A capture against a pre-authorization is not documented as reversible except
+      through the normal refund path after delivery.
+webhook_delivery:
+  retries: 3
+  retry_schedule_seconds: [180, 1800, 10800]
+  signature_header: X-Flywire-Digest
+  ref: asyncapi/flywire-payments-webhooks.yml
+cross_links:
+  errors: errors/flywire-problem-types.yml
+  lifecycle: lifecycle/flywire-lifecycle.yml
+  authentication: authentication/flywire-authentication.yml
+  scopes: scopes/flywire-scopes.yml
+  rate_limits: rate-limits/flywire-rate-limits.yml
+  changelog: changelog/flywire-changelog.yml
