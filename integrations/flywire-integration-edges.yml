@@ -1,0 +1,23 @@
+generated: '2026-10-14'
+method: searched
+checked:
+- guesty/integrations/guesty-integration-edges.yml
+source:
+- guesty/integrations/guesty-integration-edges.yml
+edges:
+- partner_name: Guesty (own)
+  partner: guesty
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.guesty.com/marketplace-items/flywire/
+  mirror_of: guesty/integrations/guesty-integration-edges.yml
+  apps:
+  - Flywire
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
