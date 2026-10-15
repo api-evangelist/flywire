@@ -1,5 +1,25 @@
 generated: '2026-10-14'
-method: none
+method: searched
 checked:
 - mirror
-edges: []
+- wordpress/integrations/wordpress-integration-edges.yml
+edges:
+- partner_name: WordPress (own)
+  partner: wordpress
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://wordpress.org/plugins/flywire-payment-gateway/
+  mirror_of: wordpress/integrations/wordpress-integration-edges.yml
+  apps:
+  - Flywire for WooCommerce
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  category: WordPress plugin
+source:
+- wordpress/integrations/wordpress-integration-edges.yml
