@@ -1,0 +1,35 @@
+kind: regulatory-finding
+market: canada-rpaa-psp-registry
+detected_by: sweep-canada-rpaa-psp-registry.py
+first_seen: '2026-10-22'
+findings:
+- register: Bank of Canada RPAA registry of payment service providers
+  registered_name: Flywire Payments Corporation
+  brand: Flywire
+  register_status: refused
+  register_id: 36ace475-d5a1-ef11-a72d-000d3a0c6813
+  evidence_url: https://www.bankofcanada.ca/core-functions/retail-payments-supervision/psp-registry/psp-registry-details/?account_id=36ace475-d5a1-ef11-a72d-000d3a0c6813
+  matched_domain: flywire.com
+  matched_by: domain
+  reasons:
+  - published_date: January 19, 2026
+    authority:
+    - Retail Payment Activities Act (RPAA) 48(1) / Retail Payment Activities Regulations (RPAR) 30(b)(ii)) – The RPAA does
+      not apply to the applicant or in respect of any payment functions that they perform or plan to perform
+    reason: Flywire Payments Corporation submitted a registration application to the Bank of Canada on November 14, 2024.
+      During the assessment of the application, the Bank identified that the applicant does not perform any payment functions
+      that fall within the geographic scope of the RPAA. As a result, the RPAA does not apply to the applicant. Based on these
+      facts, the Bank refused Flywire Payments Corporation’s application for registration pursuant to subsection 48(1) of
+      the RPAA and subparagraph 30(b)(ii) of the RPAR. A Notice of refusal was issued on December 18, 2025. Flywire Payments
+      Corporation did not request a review (under subsection 50(1) of the RPAA) of the Bank’s refusal to register Flywire
+      Payments Corporation. Flywire Payments Corporation a présenté une demande d’enregistrement à la Banque du Canada le
+      14 novembre 2024. Lors de l’évaluation de la demande, la Banque a déterminé que le demandeur n’exécute pas de fonctions
+      de paiement dans le cadre géographique de la LAAPD. Par conséquent, cette loi ne s’applique pas au demandeur. Compte
+      tenu de ces faits, la Banque a refusé la demande d’enregistrement de Flywire Payments Corporation en vertu du paragraphe
+      48(1) de la LAAPD et du sous-alinéa 30b)(ii) du Règlement sur les activités associées aux paiements de détail . Un avis
+      de refus a été donné le 18 décembre 2025. Flywire Payments Corporation n’a pas demandé, en vertu du paragraphe 50(1)
+      de la LAAPD, une révision du refus de sa demande d’enregistrement par la Banque.
+  negative_finding: true
+note: A refusal or revocation under the Retail Payment Activities Act is a negative regulated finding; it is recorded here
+  and is NOT an integration edge (it never counts toward participation).
+checked: '2026-10-22'
